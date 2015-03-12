@@ -1,0 +1,199 @@
+{% extends '::base.html.twig' %}
+
+{% block contents -%}
+    <div class="modal fade" id="edit-item">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit item</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#edit_item" data-toggle="tab">Edit item</a></li>
+                        <li><a href="#media" data-toggle="tab">Media</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                    <div class="tab-pane active" id="edit_item">
+                        <table class="table table-info">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label for="title">{% trans %}Title{% endtrans %} <span class="tooltip-label glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left" title="{% trans %}Provide title{% endtrans %}"></span></label>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" id="title" value="" placeholder="{% trans %}Provide title{% endtrans %}" class="form-control" />
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-info">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label for="description">Full description <span class="tooltip-label glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left" title="{% trans %}Provide full description{% endtrans %}"></span></label>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea type="text" id="description" value="" placeholder="{% trans %}Provide description{% endtrans %}" class="form-control" ></textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-info">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label for="cryptic-description">Cryptic description <span class="tooltip-label glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left" title="{% trans %}Provide cryptic description{% endtrans %}"></span></label>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea type="text" id="cryptic-description" value="" placeholder="{% trans %}Provide cryptic description{% endtrans %}" class="form-control" ></textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h3>Hints</h3>
+                        <table class="table table-hovered" id="hints">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Hint
+                                </th>
+                                <th>
+                                    Image
+                                </th>
+                                <th>
+                                    Remove?
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="hints-body">
+
+                            </tbody>
+                        </table>
+
+
+                        <div>
+                            <a id="new-row" class="btn btn-theme btn-primary">{%  trans  %}Add new hint{%  endtrans %}</a>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="tab-pane" id="media">
+                        {% include 'CityQuestBundle:Media:mediaPicker.html.twig' with {"media": media } only %}
+                        <p>
+                            <a class="btn btn-theme">Upload new file</a>
+                        </p>
+                    </div>
+                    <div class="tab-pane" id="media-hint-picker">
+                            {% include 'CityQuestBundle:Media:mediaPicker.html.twig' with {"media": media } only %}
+                            <p>
+                                <a class="btn btn-theme btn-add-return">Add media and return to item</a>
+                            </p>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="save-item" type="button" data-parent-id="{{ entity.id }}" data-id="0" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+    <table class="record_properties table table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ entity.title }}</td>
+            </tr>
+            <tr>
+                <th>Name of organisation</th>
+                <td>{{ entity.nameOrganisation }}</td>
+            </tr>
+            <tr>
+                <th>Full address</th>
+                <td>{{ entity.fullAddress }}</td>
+            </tr>
+            <tr>
+                <th>Contact person</th>
+                <td>{{ entity.contactPerson }}</td>
+            </tr>
+
+            <tr>
+                <th>Email address</th>
+                <td>{{ entity.emailAddress }}</td>
+            </tr>
+            <tr>
+                <th>Telephone number</th>
+                <td>{{ entity.telephoneNumber }}</td>
+            </tr>
+            <tr>
+                <th>Abstract</th>
+                <td>{{ entity.abstract }}</td>
+            </tr>
+            <tr>
+                <th>Average duration</th>
+                <td>{{ entity.averageDuration }}</td>
+            </tr>
+            <tr>
+                <th>Disclaimer</th>
+                <td>{{ entity.disclaimer }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-theme" href="{{ path('quest_edit', { 'id': entity.id }) }}">
+        {% trans %}Edit{% endtrans %}
+    </a>
+    <hr>
+
+    <h3>Items</h3>
+    <div class="well" id="items-container">
+        <div id="items-quest">
+
+         {% include 'CityQuestBundle:Quest:items.html.twig' with {"items": entity.items } only %}
+
+        </div>
+
+        <a class="btn btn-theme btn-add-item"  data-toggle="modal" data-target="#edit-item" >
+            Add item
+        </a>
+    </div>
+
+    <a href="{{ path('quest') }}">
+            {% trans %}Back to the list{% endtrans %}
+    </a>
+    {{ form(delete_form) }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script src="{{ asset('js/items.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'CityQuestBundle:CityQuest:layout.html.twig' %}
+
+
+{% block content %}
+    <section class="content-container">
+        <div class="profile-container">
+         <form id="cq_profile_form">
+            <div class="form-element">
+                <label for="full_name">Username</label>
+                <input type="text" id="full_name" name="full_name" placeholder="Full name" value="{{ app.user.username }}">
+            </div>
+            <div class="form-element">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" placeholder="Email" value="{{ app.user.email }}">
+            </div>
+            <div class="form-element">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <div class="form-element">
+                <label for="repeat_password">Repeat password</label>
+                <input type="password" name="repeat_password" id="repeat_password">
+            </div>
+            <br/>
+            <button id="update-profile" class="btn-normal">Update</button>
+        </form>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $('#update-profile').on('click', function(){
+        $.ajax({
+            type: "POST",
+            url: "{{ path('cityquest_profile_edit') }}",
+            data: {
+                full_name: $('#full_name').val(),
+                email: $('#email').val(),
+                password: $('#password').val(),
+                repeatpassword: $('#repeat_password').val()
+            },
+            success: function(){
+                alert('Data updated!');
+            },
+            error: function(){
+                alert('Something went wrong!');
+            }
+        })
+        event.preventDefault();
+    });
+
+
+
+</script>
+{% endblock %}

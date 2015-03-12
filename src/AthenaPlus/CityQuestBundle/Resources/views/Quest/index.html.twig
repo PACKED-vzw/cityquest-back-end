@@ -1,0 +1,62 @@
+{% extends '::base.html.twig' %}
+
+{% block contents -%}
+
+    <div class="col-lg-9">
+       <h3 class="ctitle">All quests</h3>
+
+
+
+
+    <div class="">
+    <table class="records_list table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Average duration</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('quest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.title }}</td>
+                <td>{{ entity.averageDuration }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('quest_show', { 'id': entity.id }) }}">add items</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('quest_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('quest_get_json', { 'id': entity.id }) }}">Get json</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+
+    <div class="col-lg-3">
+        <h4>New quest</h4>
+        <a class="btn btn-theme" href="{{ path('quest_new') }}">
+            Create a new quest
+        </a>
+
+
+
+        <div class="spacing"></div>
+
+
+    </div>
+   </div>
+
+
+{% endblock %}

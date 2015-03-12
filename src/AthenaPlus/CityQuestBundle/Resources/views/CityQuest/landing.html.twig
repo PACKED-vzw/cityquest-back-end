@@ -1,0 +1,94 @@
+{% extends 'CityQuestBundle:CityQuest:layout.html.twig' %}
+{% block content %}
+    <div class="landing-page">
+        <section id="landing">
+            <article>
+                <img src="{{ asset('img/map_LANDING.png') }}" />
+                <div id="text_landing">
+                    <h2>Create your own city quest in 5 minutes!</h2>
+                    <p>CityQuest allows you to easily create a quest online, and publish to a
+                        <strong>mobile app</strong> as final result.</p>
+                    <p>Send your visitors around the city to discover items from your collection and the locations they are connected to.</p>
+                    <button>Register now</button>
+                </div>
+
+            </article>
+        </section>
+
+        <section id="register">
+            <article id="register_left">
+                <div id="quote">
+                    <h1>
+                        <strong>CityQuest</strong> is an <a href="http://github.com/PACKED-vzw/">open source application</a>, licensed under the MIT license</h1>
+                    <h1>
+                        It was created by
+                        <strong>
+                            <a href="http://www.packed.be/" target="_blank">PACKED vzw</a>
+                        </strong>in the framework of the CIP ICT-PSP
+                        <strong>
+                            <a href="http://www.athenaplus.eu/" target="_blank">AthenaPlus</a>
+                        </strong>project.
+                    </h1>
+                </div>
+
+                <div id="logo">
+                    <img src="{{ asset('img/packed_icon.jpg') }}" alt="PACKED logo"/>
+                    <img src="{{ asset('img/athena_icon.jpg') }}" alt="AthenaPlus logo"/>
+                </div>
+                <div id="icons">
+                    <img src="{{ asset('img/eu_icon_LANDING.png') }}" alt="Logo European Union"/>
+                </div>
+            </article>
+            <form id="register_right" method="post" action="{{ path('cityquest_register') }}">
+
+                <div class="login-form">
+                    <input type="text" id="cq-name" name="cq-name" placeholder="Full name" class="floatlabel" required>
+                </div>
+                <div class="login-form">
+                    <input type="email" id="cq-email" name="cq-email" placeholder="Email" class="floatlabel" required>
+                </div>
+                <div class="login-form">
+                    <input type="password" id="cq-password" name="cq-password" placeholder="Password" class="floatlabel" required>
+                </div>
+                <div class="login-form">
+                    <input type="password" id="cq-repeat-password" name="cq-repeat-password"  placeholder="Repeat password" class="floatlabel" required>
+                </div>
+                <div class="login-form">
+                    <button type="submit">Sign up</button>
+                </div>
+            </form>
+
+        </section>
+    </div>
+
+
+{%  endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#register_right').submit(function(e){
+
+                $('.form-notification').each(function(){
+                    $(this).remove();
+                });
+
+                if($('#cq-password').val()!==$('#cq-repeat-password').val()){
+                    e.preventDefault();
+                    $('#cq-password').focus().parent().append('<span class="form-notification">Passwords do not match!</span>');
+                    return false;
+                }
+                if(!($('#cq-password').val().length > 5) && ($('#cq-password').val().length < 40)){
+                    e.preventDefault();
+                    $('#cq-password').focus().parent().append('<span class="form-notification">Passwords should be between 5 and 40 characters long!</span>');
+                    return false;
+                }
+                return true;
+
+            });
+
+        });
+    </script>
+
+{% endblock %}

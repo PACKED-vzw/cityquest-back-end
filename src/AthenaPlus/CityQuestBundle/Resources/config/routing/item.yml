@@ -1,0 +1,58 @@
+#item:
+#    pattern:  /
+#    defaults: { _controller: "CityQuestBundle:Item:index" }
+#    options:
+#        expose: true
+#
+#item_show:
+#    pattern:  /{id}/show
+#    defaults: { _controller: "CityQuestBundle:Item:show" }
+#
+#item_new:
+#    pattern:  /new
+#    defaults: { _controller: "CityQuestBundle:Item:new" }
+#
+#item_create:
+#    pattern:  /create
+#    defaults: { _controller: "CityQuestBundle:Item:create" }
+#    requirements: { _method: post }
+#
+#item_edit:
+#    pattern:  /{id}/edit
+#    defaults: { _controller: "CityQuestBundle:Item:edit" }
+#    options:
+#        expose: true
+#
+#item_update:
+#    pattern:  /{id}/update
+#    defaults: { _controller: "CityQuestBundle:Item:update" }
+#    requirements: { _method: post|put }
+#
+#item_delete:
+#    pattern:  /{id}/delete
+#    defaults: { _controller: "CityQuestBundle:Item:delete" }
+#    requirements: { _method: post|delete }
+#    options:
+#        expose: true
+#
+#item_ajax_save:
+#    pattern:  /save
+#    defaults: { _controller: "CityQuestBundle:Item:saveAjax" }
+#    options:
+#        expose: true
+#
+#item_ajax_load:
+#    pattern:  /load
+#    defaults: { _controller: "CityQuestBundle:Item:loadAjax" }
+#    options:
+#        expose: true
+#
+#item_media:
+#    pattern:  /gallery
+#    defaults: { _controller: "CityQuestBundle:Item:gallery" }
+#
+#print_qr:
+#    pattern: /print-qr/{id}
+#    defaults: { _controller: "CityQuestBundle:Item:printQr"}
+#
+#

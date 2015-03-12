@@ -1,0 +1,14 @@
+{% extends 'CityQuestBundle:CityQuest:layout.html.twig' %}
+{% block content %}
+    <section class="content-container manage-page" ng-app="cityquest">
+        <div class="content-manage" ng-controller="MainCtrl">
+            <div ui-view></div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

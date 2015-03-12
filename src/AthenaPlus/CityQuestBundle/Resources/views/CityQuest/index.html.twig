@@ -1,0 +1,42 @@
+{% extends 'CityQuestBundle:CityQuest:layout.html.twig' %}
+{% block content %}
+    <div id="index-ctn">
+        <div class="quest-list">
+
+            {% for entity in entities %}
+                <div class="quest-item" id="quest_{{ entity.id }}" >
+                    <h2 data-path="{{ path('cityquest_manage') }}#quest/{{ entity.id }}">{{ entity.title }} <img class="caret-right" src="{{ asset('img/caret_right.png') }}"></h2>
+                    <p>{{ entity.abstract|striptags}}</p>
+                    <p class="last-edited">{% if entity.published %} Key: <em>{{ entity.publishKey }}</em> {% else %}Not published{%  endif %}</p>
+                    <button class="delete-quest btn-normal" data-id="{{ entity.id  }}">DELETE</button>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="btn-normal" id="new-quest" data-path="{{ path('cityquest_new_quest') }}">CREATE NEW QUEST</button>
+    </div>
+{% endblock %}
+{%  block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.delete-quest').on('click', function(){
+            var id = $(this).attr('data-id');
+            var confirm = window.confirm("Are you sure you want to delete this quest?");
+            if(confirm){
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate( 'quest_delete', { id: id }),
+                    success: function(data){
+                        if(data=="ok"){
+                            $('#quest_' + id).remove();
+                            alert("Quest deleted!");
+                        }
+                    }
+
+                });
+            }
+
+        });
+    });
+</script>
+{%  endblock %}

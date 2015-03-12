@@ -1,0 +1,42 @@
+<style type="text/css" media="print">
+    @media print {
+        button {display: none;}
+        p {display: none;}
+        h2 {display: none;}
+        header {display: none;}
+        .image-resize {display: none;}
+        .content-container {
+            top: 0px;
+        }
+        .qr-container {
+            position: relative;
+        }
+        .qrcode-print-box {
+            page-break-after: always;
+            page-break-inside: avoid;
+            position: relative;
+        }
+        .print-title {
+            display: block;
+        }
+    }
+</style>
+<button class="btn-normal" ui-sref="quest({ questId: quest.details.id })">Return to quest</button>
+
+<h2>Print QR-codes</h2>
+<p>Click on an image to print the individual image</p>
+<button class="btn-normal" ng-click="print()">Print</button>
+<div id="image-resize">
+    <button class="btn-normal" ng-click="decreaseSize()"> - </button><span class="image-resize">size</span><button class="btn-normal" ng-click="increaseSize()"> + </button>
+</div>
+
+
+
+
+<div class="qr-container">
+    <div class="qrcode-print-box" ng-repeat="item in quest.details.items">
+    <qrcode class="qrcode-print" size="{[size]}" data="{[item.qrcode]}"></qrcode>
+        <p class="print-title">{[item.title]}</p>
+    </div>
+</div>
+

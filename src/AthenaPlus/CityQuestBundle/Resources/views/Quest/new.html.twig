@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+{% block page_title %} Quest creation {% endblock %}
+{% block contents %}
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('quest') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

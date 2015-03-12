@@ -1,0 +1,3 @@
+default_landing:
+    pattern:  /
+    defaults: { _controller: "CityQuestBundle:Quest:landing" }

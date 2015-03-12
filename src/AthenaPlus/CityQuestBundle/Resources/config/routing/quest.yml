@@ -1,0 +1,92 @@
+#quest:
+#    pattern:  /
+#    defaults: { _controller: "CityQuestBundle:Quest:landing" }
+
+cityquest_profile_show:
+    pattern:  /profile
+    defaults: { _controller: "CityQuestBundle:Quest:showProfile" }
+
+cityquest_profile_edit:
+    pattern:  /profile/edit
+    defaults: { _controller: "CityQuestBundle:Quest:editProfileAjax" }
+    requirements: { _method: post }
+
+cityquest_landing:
+    pattern:  /landing
+    defaults: { _controller: "CityQuestBundle:Quest:landing" }
+
+cityquest_manage:
+    pattern:  /manage
+    defaults: { _controller: "CityQuestBundle:Quest:manage" }
+
+#cityquest_api_test:
+#    pattern:  /api
+#    defaults: { _controller: "CityQuestBundle:Quest:apiTest" }
+#    options:
+#      expose: true
+#
+#cityquest_api_test2:
+#    pattern:  /apitest
+#    defaults: { _controller: "CityQuestBundle:Quest:apiTest2" }
+#    options:
+#      expose: true
+
+
+#
+#cityquest_api_post_test:
+#    pattern:  /api/post
+#    defaults: { _controller: "CityQuestBundle:Quest:apiPostTest" }
+#    options:
+#      expose: true
+
+cityquest_register:
+     pattern:  /signup
+     defaults: { _controller: "CityQuestBundle:Quest:signup" }
+     requirements: { _method: post }
+
+cityquest_list:
+     pattern:  /list
+     defaults: { _controller: "CityQuestBundle:Quest:list" }
+
+cityquest_new_quest:
+     pattern:  /new
+     defaults: { _controller: "CityQuestBundle:Quest:createQuest" }
+
+#quest_show:
+#    pattern:  /{id}/show
+#    defaults: { _controller: "CityQuestBundle:Quest:show" }
+#
+#quest_new:
+#    pattern:  /new
+#    defaults: { _controller: "CityQuestBundle:Quest:new" }
+#
+#quest_create:
+#    pattern:  /create
+#    defaults: { _controller: "CityQuestBundle:Quest:create" }
+#    requirements: { _method: post }
+#
+#quest_edit:
+#    pattern:  /{id}/edit
+#    defaults: { _controller: "CityQuestBundle:Quest:edit" }
+#
+#quest_update:
+#    pattern:  /{id}/update
+#    defaults: { _controller: "CityQuestBundle:Quest:update" }
+#    requirements: { _method: post|put }
+#
+#quest_delete:
+#    pattern:  /{id}/delete
+#    defaults: { _controller: "CityQuestBundle:Quest:delete" }
+#    requirements: { _method: post|delete }
+#
+#quest_load_items:
+#    pattern:  /load_items
+#    defaults: { _controller: "CityQuestBundle:Quest:loadItems" }
+#    options:
+#        expose: true
+
+quest_get_json:
+    pattern:  /get_json/{id}
+    defaults: { _controller: "CityQuestBundle:Quest:getJson" }
+    options:
+        expose: true

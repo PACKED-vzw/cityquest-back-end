@@ -1,0 +1,55 @@
+cityquest_api_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "CityQuestBundle:Api:update" }
+    requirements: { _method: post }
+    options:
+      expose: true
+
+cityquest_load_quest:
+    pattern:  /{id}/load
+    defaults: { _controller: "CityQuestBundle:Api:loadQuest" }
+    options:
+      expose: true
+
+cityquest_upload_image:
+    pattern:  /{id}/upload-image
+    defaults: { _controller: "CityQuestBundle:Api:uploadImage" }
+    options:
+      expose: true
+
+cityquest_publish:
+    pattern:  /publish/{id}
+    defaults: { _controller: "CityQuestBundle:Api:publish" }
+    options:
+      expose: true
+
+cityquest_add_item:
+    pattern:  /add_item/{id}
+    defaults: { _controller: "CityQuestBundle:Api:addItem" }
+    options:
+      expose: true
+
+cityquest_update_item:
+    pattern:  /update_item/{id}
+    defaults: { _controller: "CityQuestBundle:Api:updateItem" }
+    options:
+      expose: true
+
+cityquest_get_data:
+    pattern:  /key/{key}
+    defaults: { _controller: "CityQuestBundle:Api:getQuestData" }
+    options:
+      expose: true
+
+cityquest_convert_base_image:
+    pattern:  /convertimage
+    defaults: { _controller: "CityQuestBundle:Api:convertBase64toFile" }
+    options:
+      expose: true
+
+
+quest_delete:
+    pattern:  /quest-delete/{id}
+    defaults: { _controller: "CityQuestBundle:Api:delete" }
+    options:
+      expose: true

@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+{% block page_title %}
+    {% trans %}Quest edit{% endtrans %}
+{% endblock %}
+{% block contents -%}
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('quest') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
+
+{% block javascripts %}
+ {{  parent() }}
+ <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
+
+{% endblock %}

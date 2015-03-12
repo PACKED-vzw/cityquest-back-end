@@ -1,0 +1,17 @@
+CityQuestBundle_default:
+    resource: "@CityQuestBundle/Resources/config/routing/default.yml"
+    prefix:   /
+
+CityQuestBundle_quest:
+    resource: "@CityQuestBundle/Resources/config/routing/quest.yml"
+    prefix:   /{_locale}/quest
+    requirements:
+            _locale: en|fr
+
+CityQuestBundle_item:
+    resource: "@CityQuestBundle/Resources/config/routing/item.yml"
+    prefix:   /item
+
+CityQuestBundle_api:
+    resource: "@CityQuestBundle/Resources/config/routing/api.yml"
+    prefix:   /{_locale}/api
