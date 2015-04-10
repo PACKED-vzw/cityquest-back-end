@@ -6,3 +6,4 @@ web/map*
 web/uploads*
 app/cache/*
 app/logs/*
+.DS*

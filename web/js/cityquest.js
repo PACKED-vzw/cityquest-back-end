@@ -333,7 +333,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 
 
 
-
+        console.log (JSON.stringify ($scope.quest.details));
         $http({
             method: 'POST',
             url: Routing.generate ("cityquest_api_update", {id: $scope.quest.details.id }),
@@ -351,6 +351,21 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 $scope.imageFile = $scope.quest.details.imageFile;
                 $scope.zoomLevelStatic = parseInt(data.details.map.zoom, 10);
                 $scope.staticImage = data.details.map.url;
+
+                /*
+                Loop through all items to set item.hint.parent_item so we can delete hints (to prevent breakage for older quests)
+                See $scope.deleteHint & $scope.addHint
+                 */
+                for (var i = 0; i < $scope.items.length; i++) {
+                    for (var j = 0; j < $scope.items[i].hints.length; j++) {
+                        if (typeof ($scope.items[i].hints[j].parent_item) == 'undefined') {
+                            $scope.items[i].hints[j].parent_item = $scope.items[i].itemid;
+                        }
+                        if (typeof ($scope.items[i].hints[j].hint_id) == 'undefined') {
+                            $scope.items[i].hints[j].hint_id = token ();
+                        }
+                    }
+                }
 
                 $scope.coordinates = {
                     'startpoint': {},
@@ -414,12 +429,23 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
             });
     };
 
-    $scope.deleteHint = function(item){
-        $scope.items[$scope.position].hints.splice($scope.items[$scope.position].hints.indexOf(item), 1);
-    }
+    $scope.deleteHint = function(hint) {
+        for (var i = 0; i < $scope.items.length; i++) {
+            if ($scope.items[i].itemid == hint.parent_item) {
+                for (var j = 0; j < $scope.items[i].hints.length; j++) {
+                    if ($scope.items[i].hints[j].hint_id == hint.hint_id) {
+                        $scope.items[i].hints.splice (j, 1);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+//        $scope.items[$scope.position].hints.splice($scope.items[$scope.position].hints.indexOf(item), 1);
+    };
 
     $scope.addHint = function(item){
-        var hint = { title: "", description: "", image: "img/parijs.jpg"};
+        var hint = { title: "", description: "", image: "img/parijs.jpg", parent_item: item.itemid, hint_id: token ()};
         item.hints.push(hint);
     }
 
