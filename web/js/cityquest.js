@@ -333,7 +333,6 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 
 
 
-        console.log (JSON.stringify ($scope.quest.details));
         $http({
             method: 'POST',
             url: Routing.generate ("cityquest_api_update", {id: $scope.quest.details.id }),
@@ -429,6 +428,11 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
             });
     };
 
+    /*
+    Delete a hint from an item.
+    @param object hint
+    Uses parent_item, itemid and hint_id to select and delete the right item.
+     */
     $scope.deleteHint = function(hint) {
         for (var i = 0; i < $scope.items.length; i++) {
             if ($scope.items[i].itemid == hint.parent_item) {
@@ -444,15 +448,29 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 //        $scope.items[$scope.position].hints.splice($scope.items[$scope.position].hints.indexOf(item), 1);
     };
 
+    /*
+    Add a new hint to an item.
+    @param object hint
+    hint = object (title, description, image, parent_item, hint_id)
+     */
     $scope.addHint = function(item){
         var hint = { title: "", description: "", image: "img/parijs.jpg", parent_item: item.itemid, hint_id: token ()};
         item.hints.push(hint);
-    }
+    };
 
+    /*
+    Delete an item from a quest.
+    @param object item
+    Uses itemid to delete the right item.
+     */
     $scope.deleteItem = function(item){
-        $scope.items.splice($scope.position, 1);
-        delete $scope.item;
-    }
+        for (var i = 0; i < $scope.items.length; i++) {
+            if (item.itemid == $scope.items[i].itemid) {
+                $scope.items.splice (i, 1);
+                break;
+            }
+        }
+    };
 
     $scope.showMiniCropContainer = function() {
         $scope.miniCropContainer = !$scope.miniCropContainer;
