@@ -244,7 +244,7 @@ class QuestController extends Controller
 
         $user->setUsername($request->get('full_name'));
         // todo: set password rules
-        $user->setPassword($request->get('password'));
+        $user->setPlainPassword($request->get('password'));
         $user->setEmail($request->get('email'));
         $user->setOrganisation("test");
         $user->setAddress("test");
