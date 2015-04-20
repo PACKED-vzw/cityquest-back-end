@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  */
 class ApiController extends Controller
 {
-    protected $allowable_tags = array ('<p><b><u><strong><em><i>');
+    protected $allowable_tags = '<p><b><u><strong><em><i>';
     /**
      * updates Quest
      *
@@ -44,11 +44,11 @@ class ApiController extends Controller
         $quest->setTitle($details['name']);
 
         if (isset($details['organisation'])) {
-            $quest->setNameOrganisation($details['organisation']);
+            $quest->setNameOrganisation(strip_tags ($details['organisation'], $this->allowable_tags));
         }
 
         if (isset($details['address'])) {
-            $quest->setFullAddress($details['address']);
+            $quest->setFullAddress(strip_tags ($details['address'], $this->allowable_tags));
         }
 
         if (isset($details['duration'])) {
@@ -56,24 +56,24 @@ class ApiController extends Controller
         }
 
         if (isset($details['disclaimer'])){
-            $quest->setDisclaimer($details['disclaimer']);
+            $quest->setDisclaimer(strip_tags ($details['disclaimer'], $this->allowable_tags));
         }
 
         if (isset($details['abstract'])){
-            $quest->setAbstract($details['abstract']);
+            $quest->setAbstract(strip_tags ($details['abstract'], $this->allowable_tags));
         }
 
         if(isset($details['contact']['name'])) {
-            $quest->setContactPerson($details['contact']['name']);
+            $quest->setContactPerson(strip_tags ($details['contact']['name'], $this->allowable_tags));
         }
 
         if (isset($details['contact']['email']))
         {
-            $quest->setEmailAddress($details['contact']['email']);
+            $quest->setEmailAddress(strip_tags ($details['contact']['email'], $this->allowable_tags));
         }
 
         if (isset($details['contact']['telephone'])){
-            $quest->setTelephoneNumber($details['contact']['telephone']);
+            $quest->setTelephoneNumber(strip_tags ($details['contact']['telephone'], $this->allowable_tags));
         }
 
         if (isset($details['status'])){
@@ -98,6 +98,10 @@ class ApiController extends Controller
         }
 
         if (isset($details['items'])){
+            /*/*/
+            array_walk_recursive ($details['items'], function (&$value) {
+                $value = strip_tags ($value, $this->allowable_tags);
+            });
             $quest->setItemsJson(json_encode ($details['items']));
         }
 
