@@ -12,9 +12,9 @@
                 <label>Hint title</label>
                 <input type="text" class="floatlabel" ng-model="hint.title">
                 <label>Hint description</label>
-
-                <ng-quill-editor ng-model="hint.description" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
-                                 required="" error-class="input-error"></ng-quill-editor>
+                <textarea class="floatlabel" ng-model="hint.description"></textarea>
+                <!--<ng-quill-editor ng-model="hint.description" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                 required="" error-class="input-error"></ng-quill-editor>-->
 
                 <!--<textarea type="text"  class="floatlabel" ng-model="hint.description"></textarea>-->
                 <div class="form-element">
@@ -111,15 +111,17 @@
                 </div>
                 <div class="form-element">
                     <label for="disclaimer">Disclaimer</label>
-                    <ng-quill-editor ng-model="quest.details.disclaimer" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
-                                     required="" error-class="input-error"></ng-quill-editor>
-                    <!-- <input type="text" id="disclaimer"  ng-model="quest.details.disclaimer"> -->
+                    <!--<ng-quill-editor ng-model="quest.details.disclaimer2" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                     required="" error-class="input-error"></ng-quill-editor>-->
+                    <textarea class="disclaimer" id="disclaimer" ng-model="quest.details.disclaimer"></textarea>
+                    <!-- <input type="text" id="disclaimer" ng-model="quest.details.disclaimer"> -->
                 </div>
                 <div class="form-element">
                     <label for="abstract">Abstract</label>
                     <div id="abstract">
-                        <ng-quill-editor ng-model="quest.details.abstract" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
-                                         required="" error-class="input-error"></ng-quill-editor>
+                        <!--<ng-quill-editor ng-model="quest.details.abstract2" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                         required="" error-class="input-error"></ng-quill-editor>-->
+                        <textarea class="abstract" ng-model="quest.details.abstract"></textarea>
                     <!--textarea  id="abstract"  ng-model="quest.details.abstract"></textarea>-->
                     </div>
                 </div>
@@ -216,7 +218,7 @@
                 </ul>
                 <div ng-show="debug"> {[position]} </div>
             </div>
-            <div ng-repeat="item in items">
+            <div ng-repeat="item in items track by $index">
                 <div ng-show="showItem(item)">
                     <!--<input type="text"  ng-model="item.title">
 
@@ -231,15 +233,16 @@
                         </div>
                         <div class="form-element">
                             <label>Full description</label>
-                            <ng-quill-editor id="item_description" ng-model="item.descriptionItem" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
-                                             required="" error-class="input-error"></ng-quill-editor>
+                            <!--<ng-quill-editor id="item_description" ng-model="item.descriptionItem2" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                             required="" error-class="input-error"></ng-quill-editor>-->
+                            <textarea class="item_description" id="item_description" ng-model="item.descriptionItem"></textarea>
                             <!--<textarea type="text" id="item_description"  ng-model="descriptionItem"></textarea>-->
                         </div>
                         <div class="form-element">
                             <label>Cryptic description</label>
-                            <ng-quill-editor id="item_cryptic" ng-model="item.crypticDescriptionItem" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
-                                             required="" error-class="input-error"></ng-quill-editor>
-
+                            <!--<ng-quill-editor id="item_cryptic" ng-model="item.crypticDescriptionItem2" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                             required="" error-class="input-error"></ng-quill-editor>-->
+                            <textarea class="item_description" id="item_cryptic" ng-model="item.crypticDescriptionItem"></textarea>
                             <!--<textarea type="text" id="item_cryptic"  ng-model="crypticDescriptionItem"></textarea>-->
                         </div>
                         <div class="form-element">

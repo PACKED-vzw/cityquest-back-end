@@ -309,7 +309,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     $scope.saveQuest = function(){
         $scope.saveDetails();
         alert('Quest saved');
-    }
+    };
 
     $scope.saveDetails = function(){
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -317,11 +317,13 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         $scope.quest.details.map.zoomLevel = $scope.zoomLevelStatic;
         $scope.quest.details.image = $scope.imageCropResult;
         $scope.quest.details.map = {};
-        $scope.quest.details.map.startpoint = $scope.coordinates.startpoint;
-        $scope.quest.details.map.endpoint = $scope.coordinates.endpoint;
+        if (typeof ($scope.coordinates) != 'undefined') {
+            $scope.quest.details.map.startpoint = $scope.coordinates.startpoint;
+            $scope.quest.details.map.endpoint = $scope.coordinates.endpoint;
+        }
         $scope.quest.details.items = $scope.items;
         $scope.quest.details.map.zoomLevel = $scope.zoomLevelStatic;
-
+        
         $scope.uploadImage();
 
 
@@ -346,7 +348,11 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         $http.get(Routing.generate('cityquest_load_quest', {id: $stateParams.questId}))
             .success (function(data, status, headers){
                 $scope.quest = data;
-                $scope.items = $scope.quest.details.items;
+                if (typeof ($scope.quest.details.items) != 'undefined') {
+                    $scope.items = JSON.parse ($scope.quest.details.items);
+                } else {
+                    $scope.items = [];
+                }
                 $scope.imageFile = $scope.quest.details.imageFile;
                 $scope.zoomLevelStatic = parseInt(data.details.map.zoom, 10);
                 $scope.staticImage = data.details.map.url;
@@ -356,12 +362,14 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 See $scope.deleteHint & $scope.addHint
                  */
                 for (var i = 0; i < $scope.items.length; i++) {
-                    for (var j = 0; j < $scope.items[i].hints.length; j++) {
-                        if (typeof ($scope.items[i].hints[j].parent_item) == 'undefined') {
-                            $scope.items[i].hints[j].parent_item = $scope.items[i].itemid;
-                        }
-                        if (typeof ($scope.items[i].hints[j].hint_id) == 'undefined') {
-                            $scope.items[i].hints[j].hint_id = token ();
+                    if (typeof ($scope.items[i].hints) != 'undefined') {
+                        for (var j = 0; j < $scope.items[i].hints.length; j++) {
+                            if (typeof ($scope.items[i].hints[j].parent_item) == 'undefined') {
+                                $scope.items[i].hints[j].parent_item = $scope.items[i].itemid;
+                            }
+                            if (typeof ($scope.items[i].hints[j].hint_id) == 'undefined') {
+                                $scope.items[i].hints[j].hint_id = token();
+                            }
                         }
                     }
                 }

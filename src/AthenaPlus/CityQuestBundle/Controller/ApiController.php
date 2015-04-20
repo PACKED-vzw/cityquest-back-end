@@ -19,6 +19,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  */
 class ApiController extends Controller
 {
+    protected $allowable_tags = array ('<p><b><u><strong><em><i>');
     /**
      * updates Quest
      *
@@ -27,7 +28,9 @@ class ApiController extends Controller
     {
         //print_r($request->get('data')); die;
 
-        $details = json_decode($request->get('data'), true);
+        $reply = $request->getContent ();
+        $reply = substr ($reply, 5);
+        $details = json_decode (utf8_encode ($reply), true);
 
         //print_r($details); die;
 
@@ -95,7 +98,7 @@ class ApiController extends Controller
         }
 
         if (isset($details['items'])){
-            $quest->setItemsJson($details['items']);
+            $quest->setItemsJson(json_encode ($details['items']));
         }
 
         $quest->setStaticMap('hallo');
