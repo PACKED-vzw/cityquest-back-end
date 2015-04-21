@@ -30,7 +30,8 @@ class ApiController extends Controller
 
         $reply = $request->getContent ();
         $reply = substr ($reply, 5);
-        $details = json_decode (utf8_encode ($reply), true);
+        /* $reply is always UTF-8 -> JSON */
+        $details = json_decode ($reply, true);
 
         //print_r($details); die;
 
