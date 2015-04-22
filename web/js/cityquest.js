@@ -348,7 +348,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         $http.get(Routing.generate('cityquest_load_quest', {id: $stateParams.questId}))
             .success (function(data, status, headers){
                 $scope.quest = data;
-                if (typeof ($scope.quest.details.items) != 'undefined') {
+                if (typeof ($scope.quest.details.items) != 'undefined' && $scope.quest.details.items.length != 0) {
                     $scope.items = JSON.parse ($scope.quest.details.items);
                 } else {
                     $scope.items = [];
