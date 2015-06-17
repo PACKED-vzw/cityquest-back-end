@@ -103,9 +103,29 @@ class ApiController extends Controller
             array_walk_recursive ($details['items'], function (&$value) {
                 $value = strip_tags ($value, $this->allowable_tags);
             });
+            /* Generate base64-encoded image files for the mobile app for every image in $details['items'] */
+            $new_items = array ();
+            foreach ($details['items'] as $item) {
+                $img_loc = $item['image'];
+                $image = file_get_contents ($img_loc);
+                $resp = array (base64_encode ($image));
+                file_put_contents ($img_loc.'.json', json_encode ($resp));
+                if (isset ($item['64_image'])) {
+                    unset ($item['64_image']);
+                }
+                $new_hints = array ();
+                foreach ($item['hints'] as $hint) {
+                    if (isset ($hint['64_image'])) {
+                        unset ($hint['64_image']);
+                    }
+                    array_push ($new_hints, $hint);
+                }
+                $item['hints'] = $new_hints;
+                array_push ($new_items, $item);
+            }
+            $details['items'] = $new_items;
             $quest->setItemsJson(json_encode ($details['items']));
         }
-
         $quest->setStaticMap('hallo');
 
         $em = $this->getDoctrine()->getManager();
@@ -162,6 +182,7 @@ class ApiController extends Controller
     // todo dit moet naar service: http://symfony.com/doc/current/book/service_container.html of via
     // http://symfony.com/doc/current/cookbook/form/data_transformers.html
     protected function orderQuest(Quest $quest){
+        $orderedQuest['cityquestProvider'] = array ('url' => 'http://cityquest.be'); /* For portability */
         $orderedQuest['details']['id'] = $quest->getId();
         $orderedQuest['details']['name'] = $quest->getTitle();
         $orderedQuest['details']['organisation'] = $quest->getNameOrganisation();
@@ -174,7 +195,7 @@ class ApiController extends Controller
         $orderedQuest['details']['status'] = $quest->getStatus();
 
         $orderedQuest['details']['imageFile'] = $quest->getFrontImage();
-
+        $orderedQuest['details']['remote_imageFile'] = 'http://cityquest.be/'.$orderedQuest['details']['imageFile'];
         $orderedQuest['details']['contact']['name'] = $quest->getContactPerson();
         $orderedQuest['details']['contact']['email'] = $quest->getEmailAddress();
         $orderedQuest['details']['contact']['telephone'] = $quest->getTelephoneNumber();
@@ -187,6 +208,28 @@ class ApiController extends Controller
 
 
         $orderedQuest['details']['items'] = $quest->getItemsJson();
+        $new_items = array ();
+        foreach (json_decode ($orderedQuest['details']['items'], true) as $item) {
+            $img_loc = $item['image'];
+            $image = file_get_contents ($img_loc);
+            $resp = array (base64_encode ($image));
+            file_put_contents ($img_loc.'.json', json_encode ($resp));
+            if (isset ($item['64_image'])) {
+                unset ($item['64_image']);
+            }
+            $new_hints = array ();
+            foreach ($item['hints'] as $hint) {
+                if (isset ($hint['64_image'])) {
+                    unset ($hint['64_image']);
+                }
+                $hint['remote_image'] = 'http://cityquest.be/'.$hint['image'];
+                array_push ($new_hints, $hint);
+            }
+            $item['hints'] = $new_hints;
+            $item['remote_image'] = 'http://cityquest.be/'.$item['image'];
+            array_push ($new_items, $item);
+        }
+        $orderedQuest['details']['items'] = json_encode ($new_items);
         return $orderedQuest;
     }
 
@@ -282,7 +325,38 @@ class ApiController extends Controller
     }
 
 
+    /*
+     * Function to convert the item images to base64 and wrap them in a JSON-array in a JSON-file for retrieval by the API
+     * @param string $image_location
+     * @return string json-array
+     */
+    public function convertResourceImageToBase64 ($image_location) {
+        $json_file = $image_location.'.json';
+        if (!file_exists ($image_location)) {
+            throw new Exception ("Error: image $image_location does not exist");
+        }
+        $resp = null;
+        if (file_exists ($json_file)) {
+            $resp = json_decode (file_get_contents ($json_file), true);
+            return $resp[0];
+        }
+        $resp = array (base64_encode (file_get_contents ($image_location)));
+        file_put_contents ($json_file, json_encode ($resp));
+        return $resp[0];
+    }
 
+    /*
+     * Function that returns a base64-encoded image for use in the Mobile App (caching)
+     * @param string $id - image name
+     * @return jsonResponse $json
+     */
+    public function getImageAction ($id) {
+        $img_loc = 'resources';
+        if (!file_exists ($img_loc.'/'.$id)) {
+            return new JsonResponse (null);
+        }
+        return new JsonResponse (array ($this->convertResourceImageToBase64 ($img_loc.'/'.$id)));
+    }
 
 
 

@@ -5,7 +5,7 @@ var origin = document.location.origin;
 var partialPath = origin + "/partials";
 
 
-var app = angular.module('cityquest', ['ImageCropper', 'ui.sortable', 'ui.router', 'leaflet-directive', 'ngQuill'])
+var app = angular.module('cityquest', ['ImageCropper', 'ui.sortable', 'ui.router', 'ngMap'])
     .config(function($interpolateProvider){
         $interpolateProvider.startSymbol('{[').endSymbol(']}');
     }
@@ -214,7 +214,8 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     }
 
     $scope.updateStaticMap = function(){
-        $scope.staticImage =  "https://maps.googleapis.com/maps/api/staticmap?center="+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"&zoom="+ $scope.zoomLevelStatic +"&size=300x400&maptype=roadmap &markers=color:blue%7Clabel:S%7C"+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['endpoint'].lng  +"&markers=color:green%7Clabel:G%7C"+ $scope.coordinates['endpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"";
+        //$scope.staticImage =  "https://maps.googleapis.com/maps/api/staticmap?center="+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"&zoom="+ $scope.zoomLevelStatic +"&size=300x400&maptype=roadmap &markers=color:blue%7Clabel:S%7C"+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['endpoint'].lng  +"&markers=color:green%7Clabel:G%7C"+ $scope.coordinates['endpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"";
+        $scope.staticImage = "https://maps.googleapis.com/maps/api/staticmap?path=" + encodeURIComponent ($scope.coordinates['startpoint'].lat + "," + $scope.coordinates['startpoint'].lng + "|" + $scope.coordinates['endpoint'].lat + "," + $scope.coordinates['endpoint'].lng) + "&size=1000x800";
     }
 
     $scope.zoomStaticMap = function(value){
@@ -348,14 +349,18 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         $http.get(Routing.generate('cityquest_load_quest', {id: $stateParams.questId}))
             .success (function(data, status, headers){
                 $scope.quest = data;
-                if (typeof ($scope.quest.details.items) != 'undefined') {
-                    $scope.items = JSON.parse ($scope.quest.details.items);
+                if (typeof ($scope.quest.details.items) == 'object') {
+                    $scope.items = $scope.quest.details.items;
                 } else {
-                    $scope.items = [];
+                    if (typeof ($scope.quest.details.items) != 'undefined') {
+                        $scope.items = JSON.parse ($scope.quest.details.items);
+                    } else {
+                        $scope.items = [];
+                    }
                 }
                 $scope.imageFile = $scope.quest.details.imageFile;
-                $scope.zoomLevelStatic = parseInt(data.details.map.zoom, 10);
-                $scope.staticImage = data.details.map.url;
+                $scope.zoomLevelStatic = parseInt($scope.quest.details.map.zoom, 10);
+                $scope.staticImage = $scope.quest.details.map.url;
 
                 /*
                 Loop through all items to set item.hint.parent_item so we can delete hints (to prevent breakage for older quests)
@@ -379,8 +384,8 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                     'endpoint' : {}
                 };
 
-                $scope.coordinates['startpoint'] = data.details.map.startpoint;
-                $scope.coordinates['endpoint']   = data.details.map.endpoint;
+                $scope.coordinates['startpoint'] = $scope.quest.details.map.startpoint;
+                $scope.coordinates['endpoint']   = $scope.quest.details.map.endpoint;
 
                 $scope.startpointCenter = {
                     lat: 0,
@@ -415,7 +420,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 $scope.setLocation('startpoint','startpointMarkers','startpointCenter');
                 $scope.setLocation('endpoint','endpointMarkers','endpointCenter');
 
-                $scope.published = data.details.published;
+                $scope.published = $scope.quest.details.published;
                 $scope.updateStaticMap();
 
             })

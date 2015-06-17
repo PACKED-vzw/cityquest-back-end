@@ -4,7 +4,7 @@ parameters:
     database_host: 127.0.0.1
     database_port: null
     database_name: cityquest
-    database_user: root
+    database_user: cityquest
     database_password: MTQyIJcmpp
     mailer_transport: smtp
     mailer_host: 127.0.0.1
@@ -15,5 +15,5 @@ parameters:
     debug_toolbar: true
     debug_redirects: false
     use_assetic_controller: true
-    base_url: http://cityquest.be/
+    base_url: http://localhost:8000/
 

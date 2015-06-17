@@ -41,6 +41,12 @@ cityquest_get_data:
     options:
       expose: true
 
+cityquest_get_image:
+  pattern:  /image/{id}
+  defaults: { _controller: "CityQuestBundle:Api:getImage" }
+  options:
+    expose: true
+
 cityquest_convert_base_image:
     pattern:  /convertimage
     defaults: { _controller: "CityQuestBundle:Api:convertBase64toFile" }

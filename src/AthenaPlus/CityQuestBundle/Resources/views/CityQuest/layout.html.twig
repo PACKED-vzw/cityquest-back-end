@@ -37,6 +37,7 @@
 </content>
 
 {%  block javascripts %}
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&libraries=places&language=en-US"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -48,11 +49,9 @@
     <script src="{{ asset('js/angular-animate.min.js') }}"></script>
     <script src="{{ asset('js/quill.min.js') }}"></script>
     <script src="{{ asset('js/ng-quill.min.js') }}"></script>
-
-
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&libraries=places&language=en-US"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
     <script src="{{ asset('js/angular-leaflet-directive.js')}}"></script>
+    <script src="{{ asset ('bower_components/ngmap/build/scripts/ng-map.js') }}"></script>
 
     <script>
         $(document).ready(function() {

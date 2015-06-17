@@ -29,8 +29,8 @@
             <div class="mini-crop" ng-show="panes.cropcontainer{[$index]}">
                 <div ng-hide="miniCropper">
                     <image-crop
-                            data-width="100"
-                            data-height="100"
+                            data-width="300"
+                            data-height="300"
                             data-shape="square"
                             data-step="imageStepHint"
                             data-result="miniCropper"
@@ -39,7 +39,7 @@
 
 
                 <div ng-show="miniCropper">
-                    <button class="btn-normal" ng-click="pickImageHint(hint, miniCropper, $index)">Set image for hint</button>
+                    <button class="btn-normal" ng-click="pickImageHint(hint, miniCropper, $index)">Confirm image selection</button>
                     <button class="btn-normal" ng-click="miniCropper=null;imageStepHint=1">Reset</button>
 
                     <img ng-src="{[miniCropper]}" alt="Cropped Image">
@@ -272,7 +272,7 @@
                                     </div>
 
                                     <div ng-show="mediaCropper">
-                                        <button class="btn-normal" ng-click="pickImageItem(item, mediaCropper)">Set image for item</button>
+                                        <button class="btn-normal" ng-click="pickImageItem(item, mediaCropper)">Confirm image selection</button>
                                         <button class="btn-normal" ng-click="mediaCropper=null;imageStepMedia=1">Reset</button>
                                         <img ng-src="{[mediaCropper]}" alt="Cropped image">
                                     </div>
@@ -338,8 +338,10 @@
                     <button ng-click="resetLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
                 </div>
 
-
-                <leaflet ng-show="coordinates.startpoint" id="endpoint-map" markers="startpointMarkers" center="startpointCenter"></leaflet>
+                <map ng-show="coordinates.startpoint" id="endpoint-map" center="[{{startpointCenter.lat}}, {{startpointCenter.long}}]" zoom="8">
+                    <marker position="{{startpointCenter.long}}, {{startpointCenter.long}}" title="{{coordinates.startpoint.address}}"></marker>
+                </map>
+                <!--<leaflet ng-show="coordinates.startpoint" id="endpoint-map" markers="startpointMarkers" center="startpointCenter"></leaflet>-->
                 <p ng-hide="coordinates.startpoint">No startpoint set!</p>
             </div>
             <div class="form-element">
