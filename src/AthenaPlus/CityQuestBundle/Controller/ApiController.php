@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  */
 class ApiController extends Controller
 {
-    protected $allowable_tags = '<p><b><u><strong><em><i>';
+    protected $allowable_tags = '<p><b><u><strong><em><i><br><br/>';
     /**
      * updates Quest
      *
@@ -182,7 +182,7 @@ class ApiController extends Controller
     // todo dit moet naar service: http://symfony.com/doc/current/book/service_container.html of via
     // http://symfony.com/doc/current/cookbook/form/data_transformers.html
     protected function orderQuest(Quest $quest){
-        $orderedQuest['cityquestProvider'] = array ('url' => 'http://cityquest.be'); /* For portability */
+	$orderedQuest['cityquestProvider'] = array ('url' => 'http://cityquest.be');
         $orderedQuest['details']['id'] = $quest->getId();
         $orderedQuest['details']['name'] = $quest->getTitle();
         $orderedQuest['details']['organisation'] = $quest->getNameOrganisation();
@@ -209,6 +209,9 @@ class ApiController extends Controller
 
         $orderedQuest['details']['items'] = $quest->getItemsJson();
         $new_items = array ();
+	if (is_array ($orderedQuest['details']['items'])) {
+		$orderedQuest['details']['items'] = json_encode ($orderedQuest['details']['items']);
+	} 
         foreach (json_decode ($orderedQuest['details']['items'], true) as $item) {
             $img_loc = $item['image'];
             $image = file_get_contents ($img_loc);

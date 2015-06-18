@@ -1,0 +1,404 @@
+<script type="text/ng-template" id="hintTemplate">
+    <div ng-show="debug">
+    {[hint.title]} --- {[hint.description]} --- {[ $index ]}
+    </div>
+    <div class="hint">
+
+        <div class="hint-header">
+            <h3 ng-click="togglePane('hint' + $index)">Hint {[ $index + 1 ]} <img class="caret" src="/img/caret.png"></h3>
+        </div>
+        <div class="hint-body" ng-show="panes.hint{[$index]}">
+            <div class="hint-form">
+                <label>Hint title</label>
+                <input type="text" class="floatlabel" ng-model="hint.title">
+                <label>Hint description</label>
+
+                <ng-quill-editor ng-model="hint.description" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                 required="" error-class="input-error"></ng-quill-editor>
+
+                <!--<textarea type="text"  class="floatlabel" ng-model="hint.description"></textarea>-->
+                <div class="form-element">
+                    <button class="btn-normal btn-hint-uploadnew" ng-click="togglePane('cropcontainer' + $index)">UPLOAD NEW IMAGE</button>
+                    <button class="btn-normal btn-hint-delete" ng-click="deleteHint(hint)">DELETE</button>
+                </div>
+            </div>
+            <div class="hint-image">
+                <img src="/{[hint.image]}">
+            </div>
+
+            <div class="mini-crop" ng-show="panes.cropcontainer{[$index]}">
+                <div ng-hide="miniCropper">
+                    <image-crop
+                            data-width="100"
+                            data-height="100"
+                            data-shape="square"
+                            data-step="imageStepHint"
+                            data-result="miniCropper"
+                            ></image-crop>
+                </div>
+
+
+                <div ng-show="miniCropper">
+                    <button class="btn-normal" ng-click="pickImageHint(hint, miniCropper, $index)">Set image for hint</button>
+                    <button class="btn-normal" ng-click="miniCropper=null;imageStepHint=1">Reset</button>
+
+                    <img ng-src="{[miniCropper]}" alt="Cropped Image">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</script>
+
+
+<image-picker id="image-picker" class="modal"></image-picker>
+
+
+<div class="form-section">
+    <h2 ng-click="togglePane('details')">{[ quest.details.name ]} <img class="caret" src="/img/caret.png"></h2>
+    <div class="pane" ng-show="panes.details">
+        <form class="info go-bottom"
+              auto-save
+              auto-save-model="quest.details"
+              auto-save-fn="saveDetails"
+              auto-save-mode="blur">
+            <div class="column-left">
+                <div class="form-element">
+                    <label for="name">Title</label>
+                    <input type="text" id="name" placeholder="Title" ng-model="quest.details.name">
+                </div>
+                <div class="form-element">
+                    <label for="organisation">Organisation</label>
+                    <input type="text" id="organisation" placeholder="Organisation"  ng-model="quest.details.organisation">
+
+                </div>
+                <!--
+                <div class="form-element">
+                    <label for="address">Full address</label>
+                    <textarea id="address" placeholder="Full adress"  ng-model="quest.details.address"></textarea>
+                </div>
+                -->
+
+                <div class="form-element">
+                    <label>Full address</label>
+                    <div ng-hide="coordinates.startpoint.address">
+                        <input find-place="startpoint" id="startpoint" name="google_places_ac" type="text"  class="google-place-picker input-block-level" />
+                        <!--<button ng-click="setLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Set location</button>-->
+                    </div>
+                    <div ng-show="coordinates.startpoint.address">
+                        <span class="selected-address">{[coordinates.startpoint.address ]}</span>
+                        <button ng-click="resetLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
+                    </div>
+                    <leaflet id="address-map" markers="startpointMarkers" center="startpointCenter"></leaflet>
+
+                </div>
+                <div ng-show="debug">
+                zoom: -- {[zoomLevelStatic]} --
+
+                {[startpointCenter]}
+                {[endpointCenter]}
+                </div>
+
+            </div>
+
+            <div class="column-right">
+                <div class="form-element">
+                    <label for="duration">Average duration</label>
+                    <input type="text" id="duration"  ng-model="quest.details.duration">
+                </div>
+                <div class="form-element">
+                    <label for="disclaimer">Disclaimer</label>
+                    <ng-quill-editor ng-model="quest.details.disclaimer" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                     required="" error-class="input-error"></ng-quill-editor>
+                    <!-- <input type="text" id="disclaimer"  ng-model="quest.details.disclaimer"> -->
+                </div>
+                <div class="form-element">
+                    <label for="abstract">Abstract</label>
+                    <div id="abstract">
+                        <ng-quill-editor ng-model="quest.details.abstract" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                         required="" error-class="input-error"></ng-quill-editor>
+                    <!--textarea  id="abstract"  ng-model="quest.details.abstract"></textarea>-->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="column-center">
+                <div class="form-element">
+                    <label for="contact">Contact person</label>
+                    <input type="text" id="contact" ng-model="quest.details.contact.name">
+                </div>
+                <div class="form-element">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" ng-model="quest.details.contact.email">
+                </div>
+                <div class="form-element">
+                    <label for="tel">Telephone</label>
+                    <input type="text" id="tel"  ng-model="quest.details.contact.telephone">
+                </div>
+                <div class="form-element">
+                    <div id="upload-new-image" image-modal="#image-picker"><p ng-hide="imageCropResult || imageFile">Upload new image</p><img ng-show="imageFile && !imageCropResult" style="width: 100%;" ng-src="/{[imageFile]}"> <img ng-hide="imageFile" class="image-crop-section-final" id="image-crop-result" ng-show="imageCropResult" ng-src="{[ imageCropResult ]}"></div>
+                </div>
+            </div>
+
+
+            <div id="quest-admin">
+                <div class="form-element">
+                    <label for="status">Select a status</label>
+                    <div id="status-ctn">
+                        <select id="status"   ng-model="quest.details.status">
+                            <option value="Editing quest" selected>Editing quest</option>
+                            <option value="Quest in review">Quest in review</option>
+                            <option value="Quest ready">Quest ready</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-element">
+                    <!-- <button class="btn-normal" ui-sref="printqr({ questId: 1 })">PRINT ALL QR CODES</button> -->
+                    <button class="btn-normal" ng-click="goToPrintPage()">PRINT ALL QR CODES</button>
+                    <button class="btn-normal" ng-click="publish()">PUBLISH</button>
+                    <p ng-show="published">
+                        Quest is published!
+                        <br/>Enter this key in the mobile application: <strong>{[ quest.details.publishkey ]}</strong>
+                    </p>
+                    <p ng-hide="published">
+                        Not published!
+                    </p>
+                </div>
+            </div>
+
+        </form>
+        <div>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="form-section" ng-show="debug">
+    <br/><br/>
+    {[imageFile]}
+
+
+    <br/><br/><br/>
+
+    {[ quest ]}
+    <br/>
+    <br/>
+    COORDINATES
+    <br/>
+    <br/>
+    {[ coordinates ]}
+
+    COORDINATES 2
+    <br/>
+    <br/>
+    {[ coordinates2 ]} {[geoding]}
+    <br/><br/><br/>
+    image upload: http://flowjs.github.io/ng-flow/
+    <br/>
+
+    items= {[items]}
+</div>
+
+<div class="form-section" id="items-section">
+    <h2 ng-click="togglePane('items')">Items <img class="caret" src="/img/caret.png"></h2>
+    <div class="pane" id="items-pane" ng-show="panes.items">
+        <div id="items">
+            <div id="item-list-ctn">
+                <ul ui-sortable ng-model="items">
+                    <!--<li> <img id="drag-icon" src="{{ asset('img/arrow-move.png') }}"></li>-->
+                    <li ng-repeat="item in items track by $index">
+                        <span class="list-item" ng-click="editItem(item)">{[item.title]}</span>
+                    </li>
+                    <li><button class="btn-add-item" ng-click="addItem()">Add item</button></li>
+                </ul>
+                <div ng-show="debug"> {[position]} </div>
+            </div>
+            <div ng-repeat="item in items">
+                <div ng-show="showItem(item)">
+                    <!--<input type="text"  ng-model="item.title">
+
+                    <ng-quill-editor id="item_description" ng-model="item.descriptionItem" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                     required="" error-class="input-error"></ng-quill-editor>-->
+
+                    <div class="column-half">
+
+                        <div class="form-element">
+                            <label for="item_title">Title</label>
+                            <input type="text" id="item_title"  ng-model="item.title">
+                        </div>
+                        <div class="form-element">
+                            <label>Full description</label>
+                            <ng-quill-editor id="item_description" ng-model="item.descriptionItem" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                             required="" error-class="input-error"></ng-quill-editor>
+                            <!--<textarea type="text" id="item_description"  ng-model="descriptionItem"></textarea>-->
+                        </div>
+                        <div class="form-element">
+                            <label>Cryptic description</label>
+                            <ng-quill-editor id="item_cryptic" ng-model="item.crypticDescriptionItem" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="bold italic underline strike" editor-required="true"
+                                             required="" error-class="input-error"></ng-quill-editor>
+
+                            <!--<textarea type="text" id="item_cryptic"  ng-model="crypticDescriptionItem"></textarea>-->
+                        </div>
+                        <div class="form-element">
+                            <!--<button class="btn-normal" ng-click="updateItem()">Update item</button>-->
+                            <button class="btn-normal" ng-click="deleteItem(item)">Delete item</button>
+                        </div>
+                        <div class="form-element">
+                            <h3 ng-click="togglePane('media')">Media <img class="caret" src="/img/caret.png"></h3>
+                            <div class="pane media-crop" id="media-pane" ng-show="panes.media">
+
+                                <div ng-show="itemImage">
+                                    <img style="width: 100%;" ng-src="/{[itemImage]}">
+                                    <button class="btn-normal" ng-click="resetItemImage()">Choose new image</button>
+                                </div>
+
+
+                                <div ng-hide="itemImage">
+                                    <div ng-hide="mediaCropper">
+                                        <image-crop
+                                                data-width="300"
+                                                data-height="120"
+                                                data-shape="square"
+                                                data-step="imageStepMedia"
+                                                data-result="mediaCropper"
+                                                ></image-crop>
+                                    </div>
+
+                                    <div ng-show="mediaCropper">
+                                        <button class="btn-normal" ng-click="pickImageItem(item, mediaCropper)">Set image for item</button>
+                                        <button class="btn-normal" ng-click="mediaCropper=null;imageStepMedia=1">Reset</button>
+                                        <img ng-src="{[mediaCropper]}" alt="Cropped image">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="column-half">
+                        <div id="hints-ctn">
+                            <div ng-repeat="hint in item.hints" ng-include="'hintTemplate'">
+
+
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    <div id="btn-ctn">
+                        <button class="btn-normal" ng-click="addHint(item)">ADD NEW HINT</button>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section" id="map">
+    <h2 ng-click="togglePane('map')">Map <img class="caret" src="/img/caret.png"></h2>
+    <div class="pane" id="map-pane" ng-show="panes.map">
+        <p>When the user has found the latest item of the quest the application will display a map which shows the way from the users' location to the starting point of the quest.</p>
+        <p>The map will show the starting point which you entered above, and the endpoint which you need to enter here.</p>
+
+        <div class="map-container">
+            <div class="form-element">
+                <label>Location start quest</label>
+                <div ng-hide="coordinates.startpoint.address">
+                    <input find-place="startpoint" id="startpoint_endpage" name="google_places_ac" type="text"  class="google-place-picker input-block-level" />
+                    <!--<button ng-click="setLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Set location</button>-->
+                </div>
+                <div ng-show="coordinates.startpoint.address">
+                    <span class="selected-address">{[coordinates.startpoint.address ]}</span>
+                    <button ng-click="resetLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
+                </div>
+
+
+                <leaflet ng-show="coordinates.startpoint" id="endpoint-map" markers="startpointMarkers" center="startpointCenter"></leaflet>
+                <p ng-hide="coordinates.startpoint">No startpoint set!</p>
+            </div>
+            <div class="form-element">
+                <label>Location last item</label>
+                <div ng-hide="coordinates.endpoint.address">
+                    <input find-place="endpoint" id="endpoint" name="google_places_ac" type="text"  class="google-place-picker input-block-level" />
+                    <button ng-click="setLocation('endpoint','endpointMarkers','endpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Set location</button>
+                </div>
+                <div ng-show="coordinates.endpoint.address">
+                    <span class="selected-address">{[coordinates.endpoint.address ]}</span>
+                    <button ng-click="resetLocation('endpoint','endpointMarkers','endpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
+                </div>
+                <leaflet ng-show="coordinates.endpoint" id="endpoint-map" markers="endpointMarkers" center="endpointCenter"></leaflet>
+                <p ng-hide="coordinates.endpoint">No endpoint set!</p>
+            </div>
+        </div>
+
+        <h2>Static map</h2>
+        <div ng-show="coordinates.startpoint&&coordinates.endpoint">
+            <div id="image-resize">
+                <button class="btn-normal" ng-click="zoomStaticMap(-1)"> - </button><span class="image-resize">zoom</span><button class="btn-normal" ng-click="zoomStaticMap(1)"> + </button>
+            </div>
+            <img ng-src="{[staticImage]}">
+        </div>
+
+        <div ng-hide="coordinates.startpoint&&coordinates.endpoint">
+            <p>You have to select a startpoint and an endpoint to see the map.</p>
+        </div>
+
+
+    </div>
+
+    <button ng-click="saveQuest()" class="btn-normal">Save quest</button>
+    <!-- <button ng-click="debug = !debug">
+        debug
+    </button>
+    -->
+</div>
+
+
+
+<!--
+<div class="form-section">
+    <style>
+
+        .croptainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+
+    <div class="croptainer">
+        <cropme
+                width="640"
+                height="400"
+                icon-class=""
+                type="png"
+                destination-width="300">
+        </cropme>
+
+        <img src="{[cropmage]}">
+    </div>
+</div>
+->>

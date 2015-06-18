@@ -5,7 +5,7 @@ var origin = document.location.origin;
 var partialPath = origin + "/partials";
 
 
-var app = angular.module('cityquest', ['ImageCropper', 'ui.sortable', 'ui.router', 'ngMap'])
+var app = angular.module('cityquest', ['ImageCropper', 'ui.sortable', 'ui.router', 'leaflet-directive', 'ngQuill'])
     .config(function($interpolateProvider){
         $interpolateProvider.startSymbol('{[').endSymbol(']}');
     }
@@ -349,8 +349,8 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         $http.get(Routing.generate('cityquest_load_quest', {id: $stateParams.questId}))
             .success (function(data, status, headers){
                 $scope.quest = data;
-                if (typeof ($scope.quest.details.items) != 'undefined' && $scope.quest.details.items.length != 0) {
-                    $scope.items = JSON.parse ($scope.quest.details.items);
+                if (typeof ($scope.quest.details.items) == 'object') {
+                    $scope.items = $scope.quest.details.items;
                 } else {
                     if (typeof ($scope.quest.details.items) != 'undefined') {
                         $scope.items = JSON.parse ($scope.quest.details.items);

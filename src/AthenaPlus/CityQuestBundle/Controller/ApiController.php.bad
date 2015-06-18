@@ -1,0 +1,313 @@
+<?php
+
+namespace AthenaPlus\CityQuestBundle\Controller;
+
+use AthenaPlus\CityQuestBundle\Entity\Item;
+use AthenaPlus\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use AthenaPlus\CityQuestBundle\Entity\Quest;
+use AthenaPlus\CityQuestBundle\Form\QuestType;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
+/**
+ * API controller.
+ *
+ */
+class ApiController extends Controller
+{
+    protected  = array ('<p><b><u><strong><em><i>');
+    /**
+     * updates Quest
+     *
+     */
+    public function updateAction(Request ,  Quest )
+    {
+        //print_r(->get('data')); die;
+
+         = json_decode(->get('data'), true);
+
+        //print_r(); die;
+
+        //['contact'] = (array) ['contact'];
+        //print_r(); die;
+        //print_r(); die;
+        // http://stackoverflow.com/questions/19254029/angularjs-http-post-does-not-send-data
+
+        //print_r(); die;
+
+        ->setTitle(['name']);
+
+        if (isset(['organisation'])) {
+            ->setNameOrganisation(['organisation']);
+        }
+
+        if (isset(['address'])) {
+            ->setFullAddress(['address']);
+        }
+
+        if (isset(['duration'])) {
+            ->setAverageDuration(['duration']);
+        }
+
+        if (isset(['disclaimer'])){
+            ->setDisclaimer(strip_tags (['disclaimer'], ->allowable_tags));
+        }
+
+        if (isset(['abstract'])){
+            ->setAbstract(strip_tags (['abstract'], ->allowable_tags));
+        }
+
+        if(isset(['contact']['name'])) {
+            ->setContactPerson(['contact']['name']);
+        }
+
+        if (isset(['contact']['email']))
+        {
+            ->setEmailAddress(['contact']['email']);
+        }
+
+        if (isset(['contact']['telephone'])){
+            ->setTelephoneNumber(['contact']['telephone']);
+        }
+
+        if (isset(['status'])){
+            ->setStatus(['status']);
+        }
+
+        if (isset(['image'])){
+            ->setFrontImage(['image']);
+        }
+
+        if (isset(['map']['url'])){
+            ->setStaticMap(['map']['url']);
+        }
+        if (isset(['map']['startpoint'])) {
+            ->setStartpoint(['map']['startpoint']);
+        }
+        if (isset(['map']['endpoint'])) {
+            ->setEndpoint(['map']['endpoint']);
+        }
+        if (isset(['map']['zoomLevel'])){
+            ->setZoomLevelStaticMap(['map']['zoomLevel']);
+        }
+
+        if (isset(['items'])){
+             = json_decode (['items']);
+            array_walk_recursive (, function (&, ) {
+                 = strip_tags (, ->allowable_tags);
+            });
+            ->setItemsJson(json_encode ());
+        }
+
+        ->setStaticMap('hallo');
+
+         = ->getDoctrine()->getManager();
+        ->persist();
+        ->flush();
+
+        return new JsonResponse();
+    }
+
+    /**
+     * Load quest
+     */
+    public function loadQuestAction(Quest )
+    {
+
+        /*if (!->get('security.context')->isGranted('ROLE_ADMIN')){
+            if((->getUser()!=->getUser())){
+                throw new Exception('Not a quest of mine...');
+            }
+        }*/
+        /*
+        if((->getUser()!=->getUser())){
+            throw new Exception('Not a quest of mine...');
+        }
+        */
+
+        return new JsonResponse(->orderQuest());
+    }
+
+
+    /**
+     * Load quest
+     */
+    public function deleteAction(Quest )
+    {
+        if(->getUser()!=->getUser()){
+            throw new Exception('Not a quest of mine...');
+        }
+
+         = ->getDoctrine()->getManager();
+
+        if (!) {
+            throw ->createNotFoundException('Unable to find Quest entity.');
+        }
+
+        ->remove();
+        ->flush();
+
+        return new Response("ok");
+    }
+
+
+
+    // todo dit moet naar service: http://symfony.com/doc/current/book/service_container.html of via
+    // http://symfony.com/doc/current/cookbook/form/data_transformers.html
+    protected function orderQuest(Quest ){
+        ['details']['id'] = ->getId();
+        ['details']['name'] = ->getTitle();
+        ['details']['organisation'] = ->getNameOrganisation();
+        ['details']['address'] = ->getFullAddress();
+        ['details']['duration'] = ->getAverageDuration();
+        ['details']['disclaimer'] = ->getDisclaimer();
+        ['details']['abstract'] = ->getAbstract();
+        ['details']['publishkey'] = ->getPublishKey();
+        ['details']['published'] = ->getPublished();
+        ['details']['status'] = ->getStatus();
+
+        ['details']['imageFile'] = ->getFrontImage();
+
+        ['details']['contact']['name'] = ->getContactPerson();
+        ['details']['contact']['email'] = ->getEmailAddress();
+        ['details']['contact']['telephone'] = ->getTelephoneNumber();
+
+        ['details']['map']['zoom'] = ->getZoomLevelStaticMap();
+        ['details']['map']['url'] = ->getStaticMap();
+        // these are json objects
+        ['details']['map']['startpoint'] = ->getStartpoint();
+        ['details']['map']['endpoint'] = ->getEndpoint();
+
+
+        ['details']['items'] = ->getItemsJson();
+        return ;
+    }
+
+
+    /**
+     * add item
+     *
+     */
+    public function addItemAction(Request ,  Quest )
+    {
+         = new Item();
+
+        // todo: allerhande checks !?
+        ->setTitle(->get('title'));
+        ->setCrypticDescription(->get('crypticDescription'));
+        ->setHints(array());
+        ->setQuest();
+        ->setDescription(->get('description'));
+        ->setSequence(->get('sequence'));
+        ->setQrcode(uniqid());
+
+
+         = ->getDoctrine()->getManager();
+        ->persist();
+        ->flush();
+
+        return new JsonResponse(->getItemsJson());
+
+    }
+
+    public function publishAction(Quest )
+    {
+        if(->getPublished()){
+            ->setPublished(false);
+             = ->getDoctrine()->getManager();
+            ->persist();
+            ->flush();
+            return new JsonResponse(array('published' => false));
+        }
+        else {
+            ->setPublished(true);
+             = ->getDoctrine()->getManager();
+            ->persist();
+            ->flush();
+            return new JsonResponse(array('published' => true));
+        }
+
+    }
+
+
+    public function convertBase64toFileAction(Request )
+    {
+         = ->get('base64');
+         = str_replace(' ','+',);
+
+        //print_r(substr(, 1,1)); die;
+        //echo(gettype()); die;
+        /*if(gettype()=="string"){
+             = ;
+        }*/
+
+         = explode(',', );
+         = explode('/', [0]);
+         = explode(';', [1]);
+         = [0];
+
+         = "resources/" . uniqid('img_') . "." .;
+        file_put_contents(, base64_decode([1]));
+
+        return new Response();
+    }
+
+
+
+
+
+    public function getQuestDataAction()
+    {
+        // = 'piviyawosa';
+        // todo: check if quest is published ...
+         = ->getDoctrine()->getManager();
+         = ->getRepository('CityQuestBundle:Quest')->findByPublishKey();
+        if(![0]->getPublished()){
+            throw new Exception("Quest not published");
+        }
+
+        return new JsonResponse(->orderQuest([0]));
+
+
+
+        //return new Response(json_encode(), 201, array('Access-Control-Allow-Origin' => '*', 'Content-Type' => 'application/json'));
+        //return new JsonResponse(->orderQuest([0]), 200, array('Access-Control-Allow-Origin' => '*', 'Content-Type' => 'application/json'));
+    }
+
+
+
+
+
+
+    /**
+     * upload image
+     *
+     */
+    public function uploadImageAction(Request ,  Quest )
+    {
+        return new Response('true');
+
+
+
+       /*  = ->get('image');
+        // http://w3facility.info/question/php-data-uri-to-file/
+         = str_replace(' ','+',);
+         = explode(',', );
+
+        file_put_contents("image3.png", base64_decode([1]));
+
+
+
+
+
+        echo '<img src="">'; die;*/
+    }
+
+
+
+
+}
