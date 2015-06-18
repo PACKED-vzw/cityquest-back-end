@@ -372,14 +372,13 @@ class Quest
         $zoomLevel = $this->getZoomLevelStaticMap();
 
         if(array_key_exists('lat', $startpoint)&&array_key_exists('lng', $startpoint)&&array_key_exists('lat', $endpoint)&&array_key_exists('lng', $endpoint)){
+            /* OLD link
             $staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=". $startpoint['lat'] . ",". $startpoint['lng']
                 ."&zoom=". $zoomLevel ."&size=3000x6000&maptype=roadmap%20&markers=color:blue|label:S|". $startpoint['lat'] . ",". $startpoint['lng']
-                ."&markers=color:green|label:G|". $endpoint['lat'] . ",". $endpoint['lng'];
-
-
-            // $staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=51.0543422,3.7174242999999&zoom=5&size=600x300&maptype=roadmap%20&markers=color:blue|label:S|51.0543422,3.7174242999999&markers=color:green|label:G|51.2194475,4.4024643";
-
-
+                ."&markers=color:green|label:G|". $endpoint['lat'] . ",". $endpoint['lng'];*/
+            $staticMapUrl = sprintf ('https://maps.googleapis.com/maps/api/staticmap?path=%s,%s|%s,%s&size=1000x800',
+                urlencode ($startpoint['lat']), urlencode ($startpoint['lng']), urlencode ($endpoint['lat']), urlencode ($endpoint['lng'])
+            );
             $file = file_get_contents($staticMapUrl);
             $filename = "resources/" . uniqid('map_') . ".png";
             file_put_contents($filename, $file);

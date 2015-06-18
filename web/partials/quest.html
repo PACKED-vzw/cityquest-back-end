@@ -331,15 +331,11 @@
                 <label>Location start quest</label>
                 <div ng-hide="coordinates.startpoint.address">
                     <input find-place="startpoint" id="startpoint_endpage" name="google_places_ac" type="text"  class="google-place-picker input-block-level" />
-                    <!--<button ng-click="setLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Set location</button>-->
                 </div>
                 <div ng-show="coordinates.startpoint.address">
                     <span class="selected-address">{[coordinates.startpoint.address ]}</span>
                     <button ng-click="resetLocation('startpoint','startpointMarkers','startpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
                 </div>
-
-<!--
-                <leaflet ng-show="coordinates.startpoint" id="endpoint-map" markers="startpointMarkers" center="startpointCenter"></leaflet>-->
                 <p ng-hide="coordinates.startpoint">No startpoint set!</p>
             </div>
             <div class="form-element">
@@ -352,17 +348,12 @@
                     <span class="selected-address">{[coordinates.endpoint.address ]}</span>
                     <button ng-click="resetLocation('endpoint','endpointMarkers','endpointCenter')" class="btn-normal btn-small"><span class="glyphicon glyphicon-map-marker"></span> Reset</button>
                 </div>
-<!--
-                <leaflet ng-show="coordinates.endpoint" id="endpoint-map" markers="endpointMarkers" center="endpointCenter"></leaflet>-->
                 <p ng-hide="coordinates.endpoint">No endpoint set!</p>
             </div>
         </div>
 
         <h2>Static map</h2>
         <div ng-show="coordinates.startpoint&&coordinates.endpoint">
-            <div id="image-resize">
-                <button class="btn-normal" ng-click="zoomStaticMap(-1)"> - </button><span class="image-resize">zoom</span><button class="btn-normal" ng-click="zoomStaticMap(1)"> + </button>
-            </div>
             <img ng-src="{[staticImage]}">
         </div>
 

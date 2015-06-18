@@ -299,6 +299,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     };
 
     $scope.saveItems = function(){
+        console.log ($scope.quest);
         $http({
             method: 'POST',
             url: Routing.generate ("cityquest_api_update", {id: $scope.quest.details.id }),
@@ -313,6 +314,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     };
 
     $scope.saveDetails = function(){
+        console.log ('Details');
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
         $scope.quest.details.map.zoomLevel = $scope.zoomLevelStatic;
@@ -333,7 +335,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
             $scope.quest.details.items[i].order = $scope.quest.details.items.indexOf($scope.quest.details.items[i]);
         }
         //$scope.quest.details.items
-
+    console.log ($scope.quest);
 
 
         $http({
