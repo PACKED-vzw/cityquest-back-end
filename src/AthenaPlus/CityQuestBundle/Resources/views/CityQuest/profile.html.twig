@@ -30,7 +30,9 @@
 {% block javascripts %}
 {{ parent() }}
 <script type="text/javascript">
-    $('#update-profile').on('click', function(){
+    $('#update-profile').on('click', function(event){
+        console.log($('#full_name').val());
+        event.preventDefault();
         $.ajax({
             type: "POST",
             url: "{{ path('cityquest_profile_edit') }}",
@@ -46,8 +48,7 @@
             error: function(){
                 alert('Something went wrong!');
             }
-        })
-        event.preventDefault();
+        });
     });
 
 
