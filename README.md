@@ -7,5 +7,36 @@
  
  Cityquest was created by [PACKED vzw](http://packed.be/) as part of the [AthenaPlus project](http://www.athenaplus.eu/) funded by the European Commission.
 
+
 ## Installation instructions
-Install a vanilla Symfony application using the provided composer.json. Copy the tree into the symfony application, update your parameters.yml file and create a new site on your web server.
+Install a vanilla [Symfony](https://symfony.com/) application using Symfony's installer.
+
+Download this git repository and copy the tree into the root of the Symfony application.
+
+Create a MySQL database and user (in MySQL) and update your parameters.yml (in app/config) with the database server, database name, user name and password.
+
+Install all dependencies using the composer.json-file included in this Git repository.
+
+Create the tables this application uses with the following command (executed in the root of your Symfony application):
+```
+php app/console doctrine:schema:update --force
+```
+
+Execute this command to allow [FOSjsRouting](https://github.com/FriendsOfSymfony/FOSJsRoutingBundle/blob/master/Resources/doc/index.md) to work:
+```
+php app/console assets:install --symlink web
+```
+
+## User administration
+Cityquest requires at least one "administrator" account to function. You can create this account by executing the following command (executed in the root of your Symfony application):
+```
+php app/console fos:user:create Admin admin@some-email.em some_password --super-admin
+```
+
+### Resetting user passwords
+The interface does not provide a way to reset user passwords. This can be done using the CLI interface however:
+```
+php app/console fos:user:change-password Admin some_other_password
+```
+
+For more commands relating to user administration, see the documentation of [FOSUserBundle](https://symfony.com/doc/master/bundles/FOSUserBundle/command_line_tools.html).
