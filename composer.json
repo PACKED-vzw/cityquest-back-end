@@ -23,7 +23,7 @@
     "jms/serializer-bundle": "@stable",
     "sonata-project/core-bundle": "dev-master",
     "sonata-project/admin-bundle": "dev-master",
-    "sonata-project/doctrine-orm-admin-bundle": "2.0",
+    "sonata-project/doctrine-orm-admin-bundle": "dev-master",
     "sonata-project/media-bundle": "2.2.8",
     "friendsofsymfony/user-bundle": "~2.0@dev"
 
