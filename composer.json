@@ -21,10 +21,10 @@
     "endroid/qrcode-bundle": "dev-master",
     "friendsofsymfony/jsrouting-bundle": "2.0.*@dev",
     "jms/serializer-bundle": "@stable",
-    "sonata-project/core-bundle": "dev-master",
-    "sonata-project/admin-bundle": "dev-master",
-    "sonata-project/doctrine-orm-admin-bundle": "dev-master",
-    "sonata-project/media-bundle": "2.2.8",
+    "sonata-project/core-bundle": "@stable",
+    "sonata-project/admin-bundle": "@stable",
+    "sonata-project/doctrine-orm-admin-bundle": "@stable",
+    "sonata-project/media-bundle": "@stable",
     "friendsofsymfony/user-bundle": "~2.0@dev"
 
   },
