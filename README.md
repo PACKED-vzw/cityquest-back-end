@@ -27,6 +27,9 @@ Execute this command to allow [FOSjsRouting](https://github.com/FriendsOfSymfony
 php app/console assets:install --symlink web
 ```
 
+### Permissions
+You need to make sure that the web server user (e.g. www-data on Ubuntu) has write rights to the application sub tree.
+
 ## User administration
 Cityquest requires at least one "administrator" account to function. You can create this account by executing the following command (executed in the root of your Symfony application):
 ```
