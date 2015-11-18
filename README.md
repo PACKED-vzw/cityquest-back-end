@@ -30,6 +30,8 @@ php app/console assets:install --symlink web
 ### Permissions
 You need to make sure that the web server user (e.g. www-data on Ubuntu) has write rights to the application sub tree.
 
+In some cases, the directory `web/resources` is not created properly. If so, create it manually and make sure the web server user has write rights to this directory.
+
 ## User administration
 Cityquest requires at least one "administrator" account to function. You can create this account by executing the following command (executed in the root of your Symfony application):
 ```
