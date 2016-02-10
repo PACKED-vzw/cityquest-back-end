@@ -52,6 +52,10 @@ cityquest_new_quest:
      pattern:  /new
      defaults: { _controller: "CityQuestBundle:Quest:createQuest" }
 
+cityquest_new_quest_datahub:
+     pattern:  /datahub
+     defaults: { _controller: "CityQuestBundle:Quest:createDatahubQuest" }
+
 #quest_show:
 #    pattern:  /{id}/show
 #    defaults: { _controller: "CityQuestBundle:Quest:show" }

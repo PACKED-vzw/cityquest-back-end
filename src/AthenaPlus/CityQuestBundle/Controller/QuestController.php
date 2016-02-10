@@ -374,6 +374,30 @@ class QuestController extends Controller
     }
 
     /**
+     * Create a new Quest entity with data from the datahub
+     */
+    public function createDatahubQuestAction(Request $request)
+    {
+        $quest = new Quest();
+        $user = $this->getUser();
+
+        $quest->setTitle("Datahub Showcase");
+        $quest->setZoomLevelStaticMap("5");
+        $quest->setPublished(false);
+        $quest->setUser($user);
+        $quest->setItemsJson(json_encode($this->get('datahub')->getFromDatahub()));
+
+        // todo: change to make key public ....
+        $quest->setPublishKey($this->createRandomReadableString(10));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($quest);
+        $em->flush();
+
+        return new Response($this->listAction());
+    }
+
+    /**
     * Creates a form to create a Quest entity.
     *
     * @param Quest $entity The entity

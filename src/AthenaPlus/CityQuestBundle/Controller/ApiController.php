@@ -388,6 +388,27 @@ class ApiController extends Controller
     }
 
 
+    public function createQuestAction(Request $request)
+    {
+        $quest = new Quest();
+        $user = $this->getUser();
+
+
+
+        $quest->setTitle("Untitled");
+        $quest->setZoomLevelStaticMap("5");
+        $quest->setPublished(false);
+        $quest->setUser($user);
+
+        // todo: change to make key public ....
+        $quest->setPublishKey($this->createRandomReadableString(10));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($quest);
+        $em->flush();
+
+        return new Response($this->listAction());
+    }
 
 
 }
