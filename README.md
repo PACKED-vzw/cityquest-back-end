@@ -9,10 +9,6 @@
 
 
 ## Installation instructions
-Install a vanilla [Symfony](https://symfony.com/) application using Symfony's installer.
-
-Download this git repository and copy the tree into the root of the Symfony application.
-
 Create a MySQL database and user (in MySQL) and update your parameters.yml (in app/config) with the database server, database name, user name and password.
 
 Install all dependencies using the composer.json-file included in this Git repository.
