@@ -6,11 +6,10 @@ var partialPath = origin + "/partials";
 
 
 var app = angular.module('cityquest', ['ImageCropper', 'ui.sortable', 'ui.router', 'leaflet-directive', 'ngQuill'])
-    .config(function($interpolateProvider){
-        $interpolateProvider.startSymbol('{[').endSymbol(']}');
-    }
-
-);
+    .config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[').endSymbol(']}');
+        }
+    );
 
 app.directive('imagePicker', function () {
     return {
@@ -19,7 +18,7 @@ app.directive('imagePicker', function () {
     };
 });
 
-app.directive('imageModal', function (){
+app.directive('imageModal', function () {
     return {
         restrict: 'A',
 
@@ -36,7 +35,7 @@ app.directive('imageModal', function (){
                 $("#overlay")
                     .height(docHeight)
                     .css({
-                        'opacity' : 0.4,
+                        'opacity': 0.4,
                         'position': 'fixed',
                         'top': 0,
                         'left': 0,
@@ -47,7 +46,7 @@ app.directive('imageModal', function (){
 
 
                 // moet dit wel in directive of in module ?
-                $("#overlay, .crop-image").on('click', function(){
+                $("#overlay, .crop-image").on('click', function () {
 
                     // todo: dit is ellendig maar later via propere api manier proberen oplossen ...
                     //$(this).remove();
@@ -55,10 +54,9 @@ app.directive('imageModal', function (){
                     $('.modal').css('display', 'none');
 
 
-
                 });
 
-                $(modalElement).css('display','block');
+                $(modalElement).css('display', 'block');
             });
 
         }
@@ -68,50 +66,50 @@ app.directive('imageModal', function (){
 
 // https://github.com/Fundoo-Solutions/angularjs-autosave
 app.directive('autoSave', ['$interval',
-        function($interval) {
-            return {
-                restrict: 'A',
-                require: 'form',
-                link: function($scope, $element, $attrs) {
-                    var latestModel = null;
-                    var autoSaveModel = $scope.$eval($attrs.autoSaveModel);
-                    var hasModel = !!autoSaveModel;
-                    var autoSaveFn = $scope.$eval($attrs.autoSaveFn);
-                    var autoSaveMode = $attrs.autoSaveMode;
-                    var autoSaveInterval = $scope.$eval($attrs.autoSaveInterval) * 1;
-                    latestModel = angular.copy(autoSaveModel);
-                    var intervalPromise = null;
+    function ($interval) {
+        return {
+            restrict: 'A',
+            require: 'form',
+            link: function ($scope, $element, $attrs) {
+                var latestModel = null;
+                var autoSaveModel = $scope.$eval($attrs.autoSaveModel);
+                var hasModel = !!autoSaveModel;
+                var autoSaveFn = $scope.$eval($attrs.autoSaveFn);
+                var autoSaveMode = $attrs.autoSaveMode;
+                var autoSaveInterval = $scope.$eval($attrs.autoSaveInterval) * 1;
+                latestModel = angular.copy(autoSaveModel);
+                var intervalPromise = null;
 
-                    function blurHandler() {
-                        $scope.$apply(function() {
-                            autoSaveFn();
-                        });
-                    }
-
-                    if(autoSaveMode === 'interval') {
-                        intervalPromise = $interval(function() {
-                            autoSaveModel = $scope.$eval($attrs.autoSaveModel);
-                            if(!hasModel || !angular.equals(latestModel, autoSaveModel)) {
-                                latestModel = angular.copy(autoSaveModel);
-                                autoSaveFn();
-                            }
-                        }, autoSaveInterval);
-                    } else if (autoSaveMode === 'blur') {
-                        $element.find('input').on('blur', blurHandler);
-                    }
-
-                    $element.on('$destroy', function(event) {
-                        if(intervalPromise) {
-                            $interval.cancel(intervalPromise);
-                        }
-                        if (autoSaveMode === 'blur') {
-                            $element.find('input').off('blur', blurHandler);
-                        }
+                function blurHandler() {
+                    $scope.$apply(function () {
+                        autoSaveFn();
                     });
                 }
+
+                if (autoSaveMode === 'interval') {
+                    intervalPromise = $interval(function () {
+                        autoSaveModel = $scope.$eval($attrs.autoSaveModel);
+                        if (!hasModel || !angular.equals(latestModel, autoSaveModel)) {
+                            latestModel = angular.copy(autoSaveModel);
+                            autoSaveFn();
+                        }
+                    }, autoSaveInterval);
+                } else if (autoSaveMode === 'blur') {
+                    $element.find('input').on('blur', blurHandler);
+                }
+
+                $element.on('$destroy', function (event) {
+                    if (intervalPromise) {
+                        $interval.cancel(intervalPromise);
+                    }
+                    if (autoSaveMode === 'blur') {
+                        $element.find('input').off('blur', blurHandler);
+                    }
+                });
             }
         }
-    ]);
+    }
+]);
 
 
 app.config(function ($stateProvider, $urlRouterProvider) {
@@ -135,30 +133,29 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 });
 
 
-app.controller('PrintCtrl', function ($scope, $rootScope){
+app.controller('PrintCtrl', function ($scope, $rootScope) {
 
     $scope.quest = $rootScope.quest;
     $scope.size = 200;
 
-    $scope.increaseSize = function(){
+    $scope.increaseSize = function () {
         $scope.size += 50;
     }
-    $scope.decreaseSize = function(){
+    $scope.decreaseSize = function () {
         $scope.size -= 50;
     }
-    $scope.print = function(){
+    $scope.print = function () {
         window.print();
     }
 });
 
 
-
 app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $http, $anchorScroll, $location) {
     // all functions which need to run at startup
-    $scope.init = function(){
+    $scope.init = function () {
         $scope.statuses = {}
 
-        if(typeof $scope.startpointCenter == 'undefined'){
+        if (typeof $scope.startpointCenter == 'undefined') {
 
             $scope.startpointCenter = {
                 lat: 0,
@@ -166,7 +163,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 zoom: 15
             };
 
-            $scope.startpointMarkers =  {
+            $scope.startpointMarkers = {
                 marker: {
                     lat: 0,
                     lng: 0,
@@ -181,7 +178,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 zoom: 15
             };
 
-            $scope.endpointMarkers =  {
+            $scope.endpointMarkers = {
                 marker: {
                     lat: 0,
                     lng: 0,
@@ -190,7 +187,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 }
             };
         }
-        if(typeof $stateParams.questId != 'undefined') {
+        if (typeof $stateParams.questId != 'undefined') {
             $scope.zoomLevelStatic = 5;
             $scope.loadQuest();
         }
@@ -198,39 +195,39 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     $scope.init();
 
 
-    $scope.publish = function(){
+    $scope.publish = function () {
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_publish", {id: $scope.quest.details.id })
-        }).success (function(data, status, headers){
-            if(data.published === true){
+            url: Routing.generate("cityquest_publish", {id: $scope.quest.details.id})
+        }).success(function (data, status, headers) {
+            if (data.published === true) {
                 $scope.published = true;
             }
             else {
                 $scope.published = false;
             }
-            });
+        });
 
     }
 
-    $scope.updateStaticMap = function(){
+    $scope.updateStaticMap = function () {
         //$scope.staticImage =  "https://maps.googleapis.com/maps/api/staticmap?center="+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"&zoom="+ $scope.zoomLevelStatic +"&size=300x400&maptype=roadmap &markers=color:blue%7Clabel:S%7C"+ $scope.coordinates['startpoint'].lat + ","+ $scope.coordinates['endpoint'].lng  +"&markers=color:green%7Clabel:G%7C"+ $scope.coordinates['endpoint'].lat + ","+ $scope.coordinates['startpoint'].lng  +"";
-        $scope.staticImage = "https://maps.googleapis.com/maps/api/staticmap?path=" + encodeURIComponent ($scope.coordinates['startpoint'].lat + "," + $scope.coordinates['startpoint'].lng + "|" + $scope.coordinates['endpoint'].lat + "," + $scope.coordinates['endpoint'].lng) + "&size=1000x800";
+        $scope.staticImage = "https://maps.googleapis.com/maps/api/staticmap?path=" + encodeURIComponent($scope.coordinates['startpoint'].lat + "," + $scope.coordinates['startpoint'].lng + "|" + $scope.coordinates['endpoint'].lat + "," + $scope.coordinates['endpoint'].lng) + "&size=1000x800";
     }
 
-    $scope.zoomStaticMap = function(value){
+    $scope.zoomStaticMap = function (value) {
         $scope.zoomLevelStatic += value;
         $scope.updateStaticMap();
     }
 
-    $scope.setLocation = function(location, marker, center){
+    $scope.setLocation = function (location, marker, center) {
         $scope[center] = {
             lat: $scope.coordinates[location].lat,
             lng: $scope.coordinates[location].lng,
             zoom: 15
         };
 
-        $scope[marker] =  {
+        $scope[marker] = {
             marker: {
                 lat: $scope.coordinates[location].lat,
                 lng: $scope.coordinates[location].lng,
@@ -243,7 +240,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     }
 
 
-    $scope.resetLocation = function(location){
+    $scope.resetLocation = function (location) {
         $scope.coordinates[location] = {
             lat: 0,
             lng: 0,
@@ -254,28 +251,26 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     }
 
 
-    $scope.uploadImage = function(){
+    $scope.uploadImage = function () {
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_upload_image", {id: $scope.quest.details.id }),
+            url: Routing.generate("cityquest_upload_image", {id: $scope.quest.details.id}),
             data: "image=" + $scope.imageCropResult,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     };
 
 
-    console.log("quest id");
     console.log($stateParams.questId);
 
     // Angular aleady runs without $stateParams being set ...
 
-    if(typeof $scope.items == "undefined" ){
+    if (typeof $scope.items == "undefined") {
         $scope.items = new Array();
     }
 
 
-    $scope.details = {
-    };
+    $scope.details = {};
 
     $scope.panes = {
         // show details pane
@@ -286,35 +281,35 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     };
 
     // toggle panes
-    $scope.togglePane = function(pane){
+    $scope.togglePane = function (pane) {
         $scope.panes[pane] = !$scope.panes[pane];
     };
 
-    $scope.goToPrintPage = function(){
+    $scope.goToPrintPage = function () {
         $scope.saveDetails();
         $rootScope.quest = $scope.quest;
 
 
-        $state.go('printqr',{ questId: $scope.quest.details.id });
+        $state.go('printqr', {questId: $scope.quest.details.id});
     };
 
-    $scope.saveItems = function(){
-        console.log ($scope.quest);
+    $scope.saveItems = function () {
+        console.log($scope.quest);
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_api_update", {id: $scope.quest.details.id }),
+            url: Routing.generate("cityquest_api_update", {id: $scope.quest.details.id}),
             data: "data=" + JSON.stringify($scope.quest.details),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     }
 
-    $scope.saveQuest = function(){
+    $scope.saveQuest = function () {
         $scope.saveDetails();
         alert('Quest saved');
     };
 
-    $scope.saveDetails = function(){
-        console.log ('Details');
+    $scope.saveDetails = function () {
+        console.log('Details');
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
         $scope.quest.details.map.zoomLevel = $scope.zoomLevelStatic;
@@ -326,36 +321,38 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
         }
         $scope.quest.details.items = $scope.items;
         $scope.quest.details.map.zoomLevel = $scope.zoomLevelStatic;
-        
+
         $scope.uploadImage();
 
 
         // set order
-        for(var i = 0, length = $scope.quest.details.items.length; i < length; i++){
+        for (var i = 0, length = $scope.quest.details.items.length; i < length; i++) {
             $scope.quest.details.items[i].order = $scope.quest.details.items.indexOf($scope.quest.details.items[i]);
         }
         //$scope.quest.details.items
-    console.log ($scope.quest);
+        console.log($scope.quest);
 
 
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_api_update", {id: $scope.quest.details.id }),
+            url: Routing.generate("cityquest_api_update", {id: $scope.quest.details.id}),
             data: "data=" + JSON.stringify($scope.quest.details),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
     };
 
-    $scope.loadQuest = function(){
+    $scope.loadQuest = function () {
+        console.log('loading quest');
         $http.get(Routing.generate('cityquest_load_quest', {id: $stateParams.questId}))
-            .success (function(data, status, headers){
+            .success(function (data, status, headers) {
                 $scope.quest = data;
+                console.log($scope.quest);
                 if (typeof ($scope.quest.details.items) == 'object') {
                     $scope.items = $scope.quest.details.items;
                 } else {
                     if (typeof ($scope.quest.details.items) != 'undefined') {
-                        $scope.items = JSON.parse ($scope.quest.details.items);
+                        $scope.items = JSON.parse($scope.quest.details.items);
                     } else {
                         $scope.items = [];
                     }
@@ -365,8 +362,8 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                 $scope.staticImage = $scope.quest.details.map.url;
 
                 /*
-                Loop through all items to set item.hint.parent_item so we can delete hints (to prevent breakage for older quests)
-                See $scope.deleteHint & $scope.addHint
+                 Loop through all items to set item.hint.parent_item so we can delete hints (to prevent breakage for older quests)
+                 See $scope.deleteHint & $scope.addHint
                  */
                 for (var i = 0; i < $scope.items.length; i++) {
                     if (typeof ($scope.items[i].hints) != 'undefined') {
@@ -383,11 +380,11 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 
                 $scope.coordinates = {
                     'startpoint': {},
-                    'endpoint' : {}
+                    'endpoint': {}
                 };
 
                 $scope.coordinates['startpoint'] = $scope.quest.details.map.startpoint;
-                $scope.coordinates['endpoint']   = $scope.quest.details.map.endpoint;
+                $scope.coordinates['endpoint'] = $scope.quest.details.map.endpoint;
 
                 $scope.startpointCenter = {
                     lat: 0,
@@ -395,7 +392,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                     zoom: 15
                 };
 
-                $scope.startpointMarkers =  {
+                $scope.startpointMarkers = {
                     marker: {
                         lat: 0,
                         lng: 0,
@@ -410,7 +407,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                     zoom: 15
                 };
 
-                $scope.endpointMarkers =  {
+                $scope.endpointMarkers = {
                     marker: {
                         lat: 0,
                         lng: 0,
@@ -419,41 +416,42 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
                     }
                 };
 
-                $scope.setLocation('startpoint','startpointMarkers','startpointCenter');
-                $scope.setLocation('endpoint','endpointMarkers','endpointCenter');
+                $scope.setLocation('startpoint', 'startpointMarkers', 'startpointCenter');
+                $scope.setLocation('endpoint', 'endpointMarkers', 'endpointCenter');
 
                 $scope.published = $scope.quest.details.published;
                 $scope.updateStaticMap();
 
             })
-            .error (function(){
+            .error(function (error) {
                 console.log('Something went wrong!? This is horrible.');
+                console.log(error);
             })
     };
 
 
     // get items
-    $scope.loadItems = function(){
-        $http.get(Routing.generate( 'cityquest_api_test2'))
-            .success(function(data){
+    $scope.loadItems = function () {
+        $http.get(Routing.generate('cityquest_api_test2'))
+            .success(function (data) {
                 $scope.quest = data;
             })
-            .error(function(){
+            .error(function () {
                 console.log("Could not load items...");
             });
     };
 
     /*
-    Delete a hint from an item.
-    @param object hint
-    Uses parent_item, itemid and hint_id to select and delete the right item.
+     Delete a hint from an item.
+     @param object hint
+     Uses parent_item, itemid and hint_id to select and delete the right item.
      */
-    $scope.deleteHint = function(hint) {
+    $scope.deleteHint = function (hint) {
         for (var i = 0; i < $scope.items.length; i++) {
             if ($scope.items[i].itemid == hint.parent_item) {
                 for (var j = 0; j < $scope.items[i].hints.length; j++) {
                     if ($scope.items[i].hints[j].hint_id == hint.hint_id) {
-                        $scope.items[i].hints.splice (j, 1);
+                        $scope.items[i].hints.splice(j, 1);
                         break;
                     }
                 }
@@ -464,63 +462,62 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     };
 
     /*
-    Add a new hint to an item.
-    @param object hint
-    hint = object (title, description, image, parent_item, hint_id)
+     Add a new hint to an item.
+     @param object hint
+     hint = object (title, description, image, parent_item, hint_id)
      */
-    $scope.addHint = function(item){
-        var hint = { title: "", description: "", image: "img/parijs.jpg", parent_item: item.itemid, hint_id: token ()};
+    $scope.addHint = function (item) {
+        var hint = {title: "", description: "", image: "img/parijs.jpg", parent_item: item.itemid, hint_id: token()};
         item.hints.push(hint);
     };
 
     /*
-    Delete an item from a quest.
-    @param object item
-    Uses itemid to delete the right item.
+     Delete an item from a quest.
+     @param object item
+     Uses itemid to delete the right item.
      */
-    $scope.deleteItem = function(item){
+    $scope.deleteItem = function (item) {
         for (var i = 0; i < $scope.items.length; i++) {
             if (item.itemid == $scope.items[i].itemid) {
-                $scope.items.splice (i, 1);
+                $scope.items.splice(i, 1);
                 break;
             }
         }
     };
 
-    $scope.showMiniCropContainer = function() {
+    $scope.showMiniCropContainer = function () {
         $scope.miniCropContainer = !$scope.miniCropContainer;
     }
 
-    $scope.pickImageHint = function(hint, data, index){
+    $scope.pickImageHint = function (hint, data, index) {
 
 
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_convert_base_image", {id: $scope.quest.details.id }),
+            url: Routing.generate("cityquest_convert_base_image", {id: $scope.quest.details.id}),
             data: "base64=" + data,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function(data, status, headers, config) {
-                hint.image = data;
-                $scope.miniCropper = null;
-                $scope.imageStepHint = 1;
+        }).success(function (data, status, headers, config) {
+            hint.image = data;
+            $scope.miniCropper = null;
+            $scope.imageStepHint = 1;
 
-        }).
-            error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-            });
+        }).error(function (data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
 
         $scope.togglePane('cropcontainer' + index);
 
     }
 
-    $scope.pickImageItem = function(item, data){
+    $scope.pickImageItem = function (item, data) {
         $http({
             method: 'POST',
-            url: Routing.generate ("cityquest_convert_base_image", {id: $scope.quest.details.id }),
+            url: Routing.generate("cityquest_convert_base_image", {id: $scope.quest.details.id}),
             data: "base64=" + data,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function(data, status, headers, config) {
+        }).success(function (data, status, headers, config) {
 
             $scope.itemImage = data;
             item.image = data;
@@ -528,29 +525,27 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
             delete $scope.itemMedia;
 
             //reset cropper
-            $scope.mediaCropper=null;
-            $scope.imageStepMedia=1
+            $scope.mediaCropper = null;
+            $scope.imageStepMedia = 1
 
-        }).
-            error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-            });
+        }).error(function (data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
 
     }
 
 
-    var rand = function() {
+    var rand = function () {
         return Math.random().toString(36).substr(2); // remove `0.`
     };
 
-    var token = function() {
+    var token = function () {
         return rand() + rand(); // to make it longer
     };
 
 
-
-    $scope.addItem = function (){
+    $scope.addItem = function () {
         // add first to list
         var item = {};
         item.itemid = token();
@@ -564,7 +559,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     }
 
 
-    $scope.updateItem = function(item){
+    $scope.updateItem = function (item) {
         $scope.items[$scope.position].title = $scope.titleItem;
         //$scope.items[$scope.position].crypticDescription = $scope['crypticDescriptionItem_' + $scope.itemId ];
         $scope.items[$scope.position].crypticDescription = $scope.crypticDescriptionItem;
@@ -573,7 +568,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 
         //$scope.items[$scope.position].hints = new Array();
 
-        $scope.items[$scope.position].hints =  $scope.hints;
+        $scope.items[$scope.position].hints = $scope.hints;
         //item.hints = $scope.hints;
         //$scope.$apply();
 
@@ -582,22 +577,21 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 
     }
 
-    $scope.resetItemImage = function() {
+    $scope.resetItemImage = function () {
         delete $scope.itemImage;
         delete $scope.items[$scope.position].image;
     }
 
 
-
-    $scope.editItem = function(item){
+    $scope.editItem = function (item) {
         $scope.openItemId = item.itemid;
 
         $scope.itemImage = item.image;
         $scope.itemMedia = item.media;
     }
 
-    $scope.showItem = function(item){
-        if(item.itemid == $scope.openItemId){
+    $scope.showItem = function (item) {
+        if (item.itemid == $scope.openItemId) {
             return true;
         }
         return false;
@@ -606,7 +600,7 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
     $scope.imageCropResult = null;
     $scope.showImageCropper = true;
 
-    $scope.$watch('imageCropResult', function(newVal) {
+    $scope.$watch('imageCropResult', function (newVal) {
         if (newVal) {
             console.log('imageCropResult', newVal);
         }
@@ -616,15 +610,13 @@ app.controller('MainCtrl', function ($scope, $rootScope, $stateParams, $state, $
 });
 
 
-
-
-app.directive('findPlace', function(){
+app.directive('findPlace', function () {
     return {
-        restrict:'A',
+        restrict: 'A',
         scope: false,
-        link: function($scope, element, attrs){
-            var autocomplete = new google.maps.places.Autocomplete($('#'+attrs.id)[0], {});
-            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        link: function ($scope, element, attrs) {
+            var autocomplete = new google.maps.places.Autocomplete($('#' + attrs.id)[0], {});
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
                 var key = attrs.findPlace;
                 var placeObject = {};
@@ -640,7 +632,7 @@ app.directive('findPlace', function(){
     }
 });
 
-app.directive('qrcode', ['$window', function($window) {
+app.directive('qrcode', ['$window', function ($window) {
 
     var canvas2D = !!$window.CanvasRenderingContext2D,
         levels = {
@@ -649,7 +641,7 @@ app.directive('qrcode', ['$window', function($window) {
             'Q': 'Quartile',
             'H': 'High'
         },
-        draw = function(context, qr, modules, tile) {
+        draw = function (context, qr, modules, tile) {
             for (var row = 0; row < modules; row++) {
                 for (var col = 0; col < modules; col++) {
                     var w = (Math.ceil((col + 1) * tile) - Math.floor(col * tile)),
@@ -666,7 +658,7 @@ app.directive('qrcode', ['$window', function($window) {
         restrict: 'E',
         template: '<a class="qrcode" style="display: table;"><canvas style="' +
         'display: block; max-width: 100%;"></canvas></a>',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             var domElement = element[0],
                 canvas = element.find('canvas')[0],
                 link = element.find('a')[0],
@@ -680,13 +672,13 @@ app.directive('qrcode', ['$window', function($window) {
                 modules,
                 tile,
                 qr,
-                setVersion = function(value) {
+                setVersion = function (value) {
                     version = Math.max(1, Math.min(parseInt(value, 10), 10)) || 4;
                 },
-                setErrorCorrectionLevel = function(value) {
+                setErrorCorrectionLevel = function (value) {
                     errorCorrectionLevel = value in levels ? value : 'M';
                 },
-                setData = function(value) {
+                setData = function (value) {
                     if (!value) {
                         return;
                     }
@@ -697,7 +689,7 @@ app.directive('qrcode', ['$window', function($window) {
 
                     try {
                         qr.make();
-                    } catch(e) {
+                    } catch (e) {
                         error = e.message;
                         return;
                     }
@@ -705,12 +697,12 @@ app.directive('qrcode', ['$window', function($window) {
                     error = false;
                     modules = qr.getModuleCount();
                 },
-                setSize = function(value) {
+                setSize = function (value) {
                     size = parseInt(value, 10) || modules * 2;
                     tile = size / modules;
                     canvas.width = canvas.height = size;
                 },
-                render = function() {
+                render = function () {
                     if (!qr) {
                         return;
                     }
@@ -721,10 +713,10 @@ app.directive('qrcode', ['$window', function($window) {
                             link.href = '';
                         } else {
                             domElement.innerHTML = '<img src width="' + size + '"' +
-                            'height="' + size + '"' +
-                            'class="qrcode"' +
-                            'style="display: block;' +
-                            'max-width: 100%;">';
+                                'height="' + size + '"' +
+                                'class="qrcode"' +
+                                'style="display: block;' +
+                                'max-width: 100%;">';
                         }
                         scope.$emit('qrcode:error', error);
                         return;
@@ -749,7 +741,7 @@ app.directive('qrcode', ['$window', function($window) {
             setErrorCorrectionLevel(attrs.errorCorrectionLevel);
             setSize(attrs.size);
 
-            attrs.$observe('version', function(value) {
+            attrs.$observe('version', function (value) {
                 if (!value) {
                     return;
                 }
@@ -760,7 +752,7 @@ app.directive('qrcode', ['$window', function($window) {
                 render();
             });
 
-            attrs.$observe('errorCorrectionLevel', function(value) {
+            attrs.$observe('errorCorrectionLevel', function (value) {
                 if (!value) {
                     return;
                 }
@@ -771,7 +763,7 @@ app.directive('qrcode', ['$window', function($window) {
                 render();
             });
 
-            attrs.$observe('data', function(value) {
+            attrs.$observe('data', function (value) {
                 if (!value) {
                     return;
                 }
@@ -781,7 +773,7 @@ app.directive('qrcode', ['$window', function($window) {
                 render();
             });
 
-            attrs.$observe('size', function(value) {
+            attrs.$observe('size', function (value) {
                 if (!value) {
                     return;
                 }

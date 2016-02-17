@@ -127,3 +127,10 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: AthenaPlus\UserBundle\Entity\User
+
+services:
+    http:
+        class: AthenaPlus\CityQuestBundle\Service\Http
+    datahub:
+        class: AthenaPlus\CityQuestBundle\Service\Datahub
+        arguments: [@http]
