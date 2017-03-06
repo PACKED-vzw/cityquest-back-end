@@ -9,10 +9,6 @@
 
 
 ## Installation instructions
-Install a vanilla [Symfony](https://symfony.com/) application using Symfony's installer.
-
-Download this git repository and copy the tree into the root of the Symfony application.
-
 Create a MySQL database and user (in MySQL) and update your parameters.yml (in app/config) with the database server, database name, user name and password.
 
 Install all dependencies using the composer.json-file included in this Git repository.
@@ -29,6 +25,8 @@ php app/console assets:install --symlink web
 
 ### Permissions
 You need to make sure that the web server user (e.g. www-data on Ubuntu) has write rights to the application sub tree.
+
+In some cases, the directory `web/resources` is not created properly. If so, create it manually and make sure the web server user has write rights to this directory.
 
 ## User administration
 Cityquest requires at least one "administrator" account to function. You can create this account by executing the following command (executed in the root of your Symfony application):

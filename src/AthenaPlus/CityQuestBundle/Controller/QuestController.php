@@ -17,6 +17,7 @@ use FOS\UserBundle\Util;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 
@@ -287,6 +288,10 @@ class QuestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
 
+        // User can be null?
+        if($this->getUser() == null) {
+            return new RedirectResponse($this->generateUrl('default_landing'));
+        }
         $entities = $this->getUser()->getQuests();
 
         return $this->render('CityQuestBundle:CityQuest:index.html.twig', array(
@@ -300,6 +305,9 @@ class QuestController extends Controller
      */
     public function manageAction()
     {
+        if ($this->getUser() == null) {
+            return new RedirectResponse($this->generateUrl('default_landing'));
+        }
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('CityQuestBundle:Quest')->findAll();
@@ -588,6 +596,30 @@ class QuestController extends Controller
 
         ));
 
+    }
+
+    /**
+     * Create a new Quest entity with data from the datahub
+     */
+    public function createDatahubQuestAction(Request $request)
+    {
+        $quest = new Quest();
+        $user = $this->getUser();
+
+        $quest->setTitle("Datahub Showcase");
+        $quest->setZoomLevelStaticMap("5");
+        $quest->setPublished(false);
+        $quest->setUser($user);
+        $quest->setItemsJson($this->get('datahub')->getFromDatahub());
+
+        // todo: change to make key public ....
+        $quest->setPublishKey($this->createRandomReadableString(10));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($quest);
+        $em->flush();
+
+        return new RedirectResponse($this->generateUrl('cityquest_list'));
     }
 
 }

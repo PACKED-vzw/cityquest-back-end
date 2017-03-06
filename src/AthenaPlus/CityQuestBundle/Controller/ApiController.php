@@ -214,11 +214,14 @@ class ApiController extends Controller
 	} 
         foreach (json_decode ($orderedQuest['details']['items'], true) as $item) {
             $img_loc = $item['image'];
-            $image = file_get_contents ($img_loc);
-            $resp = array (base64_encode ($image));
-            file_put_contents ($img_loc.'.json', json_encode ($resp));
-            if (isset ($item['64_image'])) {
-                unset ($item['64_image']);
+            if($item['image'] !== null && file_exists($img_loc)) {
+                $image = file_get_contents ($img_loc);
+                $resp = array (base64_encode ($image));
+                file_put_contents ($img_loc.'.json', json_encode ($resp));
+                if (isset ($item['64_image'])) {
+                    unset ($item['64_image']);
+                }
+                $item['remote_image'] = 'http://cityquest.be/'.$item['image'];
             }
             $new_hints = array ();
             foreach ($item['hints'] as $hint) {
@@ -229,7 +232,6 @@ class ApiController extends Controller
                 array_push ($new_hints, $hint);
             }
             $item['hints'] = $new_hints;
-            $item['remote_image'] = 'http://cityquest.be/'.$item['image'];
             array_push ($new_items, $item);
         }
         $orderedQuest['details']['items'] = json_encode ($new_items);
