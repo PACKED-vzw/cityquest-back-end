@@ -57,6 +57,10 @@ class QuestController extends Controller
         ));
     }
 
+    public function privacyAction() {
+        return $this->render('CityQuestBundle:CityQuest:privacy.html.twig');
+    }
+
     /**
      * API test
      *

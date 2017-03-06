@@ -1,3 +1,7 @@
 default_landing:
     pattern:  /
     defaults: { _controller: "CityQuestBundle:Quest:landing" }
+
+default_privacy:
+    pattern:  /privacy
+    defaults: { _controller: "CityQuestBundle:Quest:privacy" }
